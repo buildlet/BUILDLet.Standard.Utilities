@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Topics>
+  <Topic id="63338126-2a10-402f-bb86-4cb68cfd336a" visible="True" isDefault="true" title="About This Document">
+    <HelpKeywords>
+      <HelpKeyword index="K" term="About" />
+    </HelpKeywords>
+  </Topic>
+  <Topic id="d093b825-0d18-4f2f-bf8e-81bc018b8f6f" visible="True" isExpanded="true" title="Version History">
+    <HelpKeywords>
+      <HelpKeyword index="K" term="version, history" />
+    </HelpKeywords>
+    <Topic id="58b208d9-bdb5-477b-adc3-22dfd04e2780" visible="True" isSelected="true" title="Version 1.4.0.0">
+      <HelpKeywords>
+        <HelpKeyword index="K" term="version, 1.4.0.0" />
+      </HelpKeywords>
+    </Topic>
+  </Topic>
+</Topics>
