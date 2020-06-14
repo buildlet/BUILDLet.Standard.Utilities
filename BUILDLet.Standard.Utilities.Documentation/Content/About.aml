@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<topic id="63338126-2a10-402f-bb86-4cb68cfd336a" revisionNumber="1">
+	<developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+		<introduction>
+			<para>
+        This is Help Documentation of <application>BUILDLet Class Library (Utilities) for .NET Standard</application>.
+      </para>
+		</introduction>
+
+		<section>
+			<title>Namespaces</title>
+			<content>
+        <para>
+          This Help Documentation describes about the following namespaces.
+        </para>
+
+        <table>
+
+          <!-- Table Header -->
+          <tableHeader>
+            <row>
+              <entry>
+                <para>Namespace</para>
+              </entry>
+              <entry>
+                <para>Description</para>
+              </entry>
+            </row>
+          </tableHeader>
+
+          <!-- BUILDLet.Standard.Utilities -->
+          <row>
+            <entry>
+              <para>
+                <codeEntityReference qualifyHint="true">N:BUILDLet.Standard.Utilities</codeEntityReference>
+              </para>
+            </entry>
+            <entry>
+              <para>
+                <!-- Namespace Summaries -->
+                <codeEntityReference qualifyHint="true">N:BUILDLet.Standard.Utilities</codeEntityReference>
+                名前空間には、様々なユーティリティー クラスが含まれます。
+            </para>
+            </entry>
+          </row>
+
+        </table>
+
+      </content>
+		</section>
+
+		<relatedTopics>
+			<link xlink:href="d093b825-0d18-4f2f-bf8e-81bc018b8f6f" />
+		</relatedTopics>
+	</developerConceptualDocument>
+</topic>
