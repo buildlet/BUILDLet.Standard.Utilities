@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <RootNamespace>BUILDLet.Standard.Utilities.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
-    <Version>1.4.0</Version>
+    <Version>1.4.3</Version>
     <Authors>Daiki Sakamoto</Authors>
     <Company>BUILDLet</Company>
     <Description>Unit Tests for BUILDLet.Standard.Utilities</Description>

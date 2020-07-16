@@ -1162,5 +1162,64 @@ namespace BUILDLet.Standard.Utilities.Tests
             // ASSERT
             param.Validate(autoEnumerable: false);
         }
+
+
+        // ----------------------------------------------------------------
+        // Tests of Import Profile
+        // ----------------------------------------------------------------
+
+        // TestParameter for ImportProfileTest
+        public class ImportProfileTestParameter : TestParameter<string>
+        {
+            public string RawLines;
+
+            // ARRANGE
+            public override void Arrange(out string expected) => expected = this.RawLines;
+
+            // ACT
+            public override void Act(out string actual)
+            {
+                // NEW PrivateProfile
+                var profile = new PrivateProfile();
+
+                // ACT: Import content
+                profile.Import(this.RawLines);
+
+                // Print Profile
+                PrivateProfileTests.PrintProfile(profile);
+                Console.WriteLine();
+
+                // GET Actual
+                actual = profile.Export();
+            }
+        }
+
+        [DataTestMethod]
+        [DataRow(
+@"[SECTION]
+KEY=VALUE
+")]
+        [DataRow(
+@"[SECTION1]
+KEY1-1=VALUE1-1
+KEY1-2=VALUE1-2
+[SECTION2]
+KEY2-1=VALUE2-1
+KEY2-2=VALUE2-2
+[SECTION3]
+KEY3-1=VALUE3-1
+KEY3-2=VALUE3-2
+")]
+        public void ImportProfileTest(string lines)
+        {
+            // SET Parameter
+            ImportProfileTestParameter param = new ImportProfileTestParameter
+            {
+                RawLines = lines
+            };
+
+            // ASSERT
+            param.Validate();
+        }
     }
 }
