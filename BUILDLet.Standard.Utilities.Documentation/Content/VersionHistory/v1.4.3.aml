@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="e851c2c5-0904-4238-bf0f-509e3c88696d" revisionNumber="1">
+	<developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+		<introduction>
+			<para>
+        Version 1.4.3 was released on July 16, 2020.
+			</para>
+		</introduction>
+
+		<section>
+			<title>Changes in This Release</title>
+			<content>
+
+				<list class="bullet">
+          
+					<listItem>
+            <para>
+              Read from <codeEntityReference>T:System.IO.Stream</codeEntityReference> class of
+              <codeEntityReference>T:BUILDLet.Standard.Utilities.PrivateProfile</codeEntityReference> class by
+              <codeEntityReference>M:BUILDLet.Standard.Utilities.PrivateProfile.Read(System.IO.Stream)</codeEntityReference>
+              method was supported.
+            </para>
+          </listItem>
+
+          <listItem>
+            <para>
+              Import / Export function of <codeEntityReference>T:BUILDLet.Standard.Utilities.PrivateProfile</codeEntityReference> by
+              <codeEntityReference autoUpgrade="true">M:BUILDLet.Standard.Utilities.PrivateProfile.Import(System.String)</codeEntityReference>
+              and
+              <codeEntityReference autoUpgrade="true">M:BUILDLet.Standard.Utilities.PrivateProfile.Export</codeEntityReference>
+              method, which imports / exports the content as <codeEntityReference>T:System.String</codeEntityReference>, was supported.
+          </para>
+          </listItem>
+
+        </list>
+
+			</content>
+		</section>
+
+		<relatedTopics>
+			<link xlink:href="d093b825-0d18-4f2f-bf8e-81bc018b8f6f" />
+		</relatedTopics>
+
+	</developerConceptualDocument>
+</topic>

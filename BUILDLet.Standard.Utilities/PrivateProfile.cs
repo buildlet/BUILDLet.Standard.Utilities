@@ -43,10 +43,7 @@ namespace BUILDLet.Standard.Utilities
         // ----------------------------------------------------------------------------------------------------
 
         // FileStream: If NOT null, File is open.
-        private FileStream stream = null;
-
-        // Stream Reader
-        private StreamReader reader = null;
+        private FileStream fileStream = null;
 
         // Sections
         private readonly Dictionary<string, PrivateProfileSection> sections = new Dictionary<string, PrivateProfileSection>(PrivateProfileSection.StringComparer);
@@ -81,6 +78,15 @@ namespace BUILDLet.Standard.Utilities
         public PrivateProfile(string path, bool readOnly = true) : this() => this.Read(path, readOnly);
 
 
+        /// <summary>
+        /// <see cref="PrivateProfile"/> クラスの新しいインスタンスを初期化して、指定された INI ファイルのコンテンツを指定されたストリームから読み込みます。
+        /// </summary>
+        /// <param name="stream">
+        /// コンテンツのストリーム。
+        /// </param>
+        public PrivateProfile(Stream stream) : this() => this.Read(stream);
+
+
         // ----------------------------------------------------------------------------------------------------
         // Public, Protected Indexer(s)
         // ----------------------------------------------------------------------------------------------------
@@ -109,7 +115,7 @@ namespace BUILDLet.Standard.Utilities
         // ----------------------------------------------------------------------------------------------------
 
         /// <summary>
-        /// ファイルに値を書き込む際に、ファイル全体の改行コードがこのプロパティの値で置き換えられます。
+        /// ファイルに値を書き込む際に、ファイル全体の改行コードがこのプロパティの値に置き換えられます。
         /// </summary>
         public static string LineBreakExpression { get; } = "\r\n";
 
@@ -137,12 +143,12 @@ namespace BUILDLet.Standard.Utilities
         /// 開いている INI ファイルの名前を表します。
         /// ファイルが開かれていないときは <c>null</c> を返します。
         /// </summary>
-        public string FileName => this.stream?.Name;
+        public string FileName => this.fileStream?.Name;
 
         /// <summary>
         /// 現在のオブジェクトでファイルが開かれていることを示します。
         /// </summary>
-        public bool IsOpen => this.stream != null;
+        public bool IsOpen => this.fileStream != null;
 
         /// <summary>
         /// 現在のオブジェクトでファイルが読み込み専用で開かれていることを示します。
@@ -174,23 +180,11 @@ namespace BUILDLet.Standard.Utilities
         /// </exception>
         public void Open(string path, bool readOnly = true)
         {
-            // Validation: If the file is already open, re-open the file (READ-ONLY) or throw Exception (READ-WRITE).
-            if (this.IsOpen)
-            {
-                // File is already open.
+            // Validation: If the file is already open as READ-WRITE
+            if (this.IsOpen && !this.IsReadOnly) { throw new InvalidOperationException(); }
 
-                if (this.IsReadOnly)
-                {
-                    // READ-ONLY:
-                    // Close the file for re-open.
-                    this.Close();
-                }
-                else
-                {
-                    // READ-WRITE:
-                    throw new InvalidOperationException();
-                }
-            }
+            // Close all resources for re-open.
+            this.Close();
 
             // SET READ-ONLY Flag
             this.IsReadOnly = readOnly;
@@ -199,12 +193,12 @@ namespace BUILDLet.Standard.Utilities
             if (this.IsReadOnly)
             {
                 // OPEN File as READ-ONLY
-                this.stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+                this.fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
             }
             else
             {
                 // OPEN File as READ-WRITE
-                this.stream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                this.fileStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
             }
 #if DEBUG
             Debug.WriteLine($"File Stream of file \"{this.FileName}\" was open as {(this.IsReadOnly ? "READ-ONLY" : "READ-WRITE")} mode.", DebugInfo.ShortName);
@@ -220,15 +214,14 @@ namespace BUILDLet.Standard.Utilities
         /// </summary>
         public void Close()
         {
-            // Dispose Stream Reader
-            ((IDisposable)this.reader)?.Dispose();
-
             // Dispose File Stream
-            ((IDisposable)this.stream)?.Dispose();
-
+            ((IDisposable)this.fileStream)?.Dispose();
 #if DEBUG
             Debug.WriteLine($"File Stream was closed.", DebugInfo.ShortName);
 #endif
+
+            // Clear sections
+            this.sections.Clear();
 
             // Clear Flag(s)
             this.IsReadOnly = false;
@@ -239,6 +232,9 @@ namespace BUILDLet.Standard.Utilities
         /// <summary>
         /// バッファ内のデータをファイルに書き込みます。
         /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// ファイルが開かれていないか、ファイルが読み込み専用で開かれています。
+        /// </exception>
         public void Write()
         {
             // Validation:
@@ -246,22 +242,17 @@ namespace BUILDLet.Standard.Utilities
 
             if (this.IsUpdated)
             {
-                StringBuilder content = new StringBuilder();
-
-                // Append Line Braek Expression
-                foreach (var line in this.GetRawLines()) { content.Append(line + PrivateProfile.LineBreakExpression); }
-
                 // Convert to Byte Array
-                byte[] array = Encoding.UTF8.GetBytes(content.ToString());
+                byte[] array = Encoding.UTF8.GetBytes(this.Export());
 
                 // Set Length of File Stream to 0
-                this.stream.SetLength(0);
+                this.fileStream.SetLength(0);
 
                 // Write to Stream
-                this.stream.Write(array, 0, array.Length);
+                this.fileStream.Write(array, 0, array.Length);
 
                 // Flush File Stream
-                this.stream.Flush();
+                this.fileStream.Flush();
 
 #if DEBUG
                 Debug.WriteLine($"File Stream of the file \"{this.FileName}\" was flushed.", DebugInfo.ShortName);
@@ -282,40 +273,56 @@ namespace BUILDLet.Standard.Utilities
         /// <param name="readOnly">
         /// INI ファイルを読み取り専用で開くときに <c>true</c> を指定します。
         /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// 既にファイルが開かれている状態で、書き込み用にファイルを開こうとしました。
-        /// </exception>
         public void Read(string path, bool readOnly = true)
         {
             // Open
             this.Open(path, readOnly);
 
             // Read
-            this.Read();
+            this.Read(this.fileStream);
         }
 
 
         /// <summary>
         /// INI ファイル (初期化ファイル) を読み込みます。
         /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// ファイルが開かれていません。
+        /// </exception>
         public void Read()
         {
+            // Validation:
+            if (!this.IsOpen) { throw new InvalidOperationException(); }
+
+            // Read
+            this.Read(this.fileStream);
+        }
+
+
+        /// <summary>
+        /// INI ファイル (初期化ファイル) のコンテンツをストリームから読み込みます。
+        /// </summary>
+        /// <param name="stream">
+        /// コンテンツのストリーム。
+        /// </param>
+        public void Read(Stream stream)
+        {
 #if DEBUG
-            Debug.WriteLine($"Start reading Stream: \"{this.FileName}\"", DebugInfo.ShortName);
+            Debug.WriteLine("Start reading Stream", DebugInfo.ShortName);
 #endif
-            using (this.reader = new StreamReader(this.stream, Encoding.UTF8, false, 255, true))
+            using (var reader = new StreamReader(stream, Encoding.UTF8, false, 255, true))
             {
                 // SET Position of BaseStream to 0
-                this.reader.BaseStream.Position = 0;
+                reader.BaseStream.Position = 0;
 
                 // Read 1st Line of Stream
-                var current_line = this.reader.ReadLine();
+                var current_line = reader.ReadLine();
 
                 // MAIN LOOP: START
                 while (current_line != null)
                 {
                     // NEW & READ Section
-                    PrivateProfileSection section = PrivateProfileSection.Read(this.reader, current_line, out string next_line);
+                    PrivateProfileSection section = PrivateProfileSection.Read(reader, current_line, out string next_line);
 
                     // Validations:
                     if (string.IsNullOrWhiteSpace(section.Name))
@@ -348,7 +355,7 @@ namespace BUILDLet.Standard.Utilities
                 // MAIN LOOP: END
             }
 #if DEBUG
-            Debug.WriteLine($"End reading Stream: \"{this.stream.Name}\"", DebugInfo.ShortName);
+            Debug.WriteLine("End reading Stream", DebugInfo.ShortName);
 #endif
         }
 
@@ -382,6 +389,36 @@ namespace BUILDLet.Standard.Utilities
         /// </returns>
         public bool Contains(string section, string key) =>
             this.sections.ContainsKey(section?.Trim()) && this.sections[section?.Trim()].Entries.ContainsKey(key?.Trim());
+
+
+        /// <summary>
+        /// INI ファイル (初期化ファイル) のコンテンツをインポートします。
+        /// </summary>
+        /// <param name="content">
+        /// インポートする INI ファイル (初期化ファイル) のコンテンツ
+        /// </param>
+        public void Import(string content) => this.Read(new MemoryStream(Encoding.UTF8.GetBytes(content)));
+
+
+        /// <summary>
+        /// このオブジェクトに関連付けられる RAW Lines を文字列としてエクスポートします。
+        /// </summary>
+        /// <returns>
+        /// INI ファイル (初期化ファイル) のコンテンツ
+        /// </returns>
+        /// <remarks>
+        /// 改行コードは <see cref="PrivateProfile.LineBreakExpression"/> に置き換えられます。
+        /// </remarks>
+        public string Export()
+        {
+            var content = new StringBuilder();
+
+            // Append Line Braek Expression
+            foreach (var line in this.GetRawLines()) { content.Append(line + PrivateProfile.LineBreakExpression); }
+
+            // RETURN
+            return content.ToString();
+        }
 
 
         /// <summary>

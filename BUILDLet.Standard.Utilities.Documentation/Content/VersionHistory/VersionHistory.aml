@@ -16,9 +16,25 @@
 
           <!-- Version 1.4.0.0 -->
           <listItem>
-						<para><link xlink:href="58b208d9-bdb5-477b-adc3-22dfd04e2780" /></para>
+						<para>
+              <link xlink:href="58b208d9-bdb5-477b-adc3-22dfd04e2780" />
+            </para>
 					</listItem>
 
+          <!-- Version 1.4.2 -->
+          <listItem>
+            <para>
+              <link xlink:href="2bf7d4eb-0cff-4a37-961b-77298f4c3b71" />
+            </para>
+          </listItem>
+
+          <!-- Version 1.4.3 -->
+          <listItem>
+            <para>
+              <link xlink:href="e851c2c5-0904-4238-bf0f-509e3c88696d" />
+            </para>
+          </listItem>
+          
           <!--
 					<listItem>
 						<para>[TODO: Add links to each specific version page]</para>
