@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="bb64a992-8d11-4d6d-b306-fdaebb09a60f" revisionNumber="1">
+	<developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+		<introduction>
+			<para>
+        Version 1.5.0 was released on December 30, 2020.
+      </para>
+		</introduction>
+
+		<section>
+			<title>Changes in This Release</title>
+			<content>
+
+				<list class="bullet">
+
+          <listItem>
+            <para>
+              The following classes and enumeration type were added.
+              
+              <list class="bullet">
+                <listItem>
+                  <codeEntityReference autoUpgrade="true">T:BUILDLet.Standard.Utilities.HtmlSyntaxParser</codeEntityReference> class
+                </listItem>
+                <listItem>
+                  <codeEntityReference autoUpgrade="true">T:BUILDLet.Standard.Utilities.HtmlContentCollection</codeEntityReference> class
+                </listItem>
+                <listItem>
+                  <codeEntityReference autoUpgrade="true">T:BUILDLet.Standard.Utilities.HtmlContent</codeEntityReference> class
+                </listItem>
+                <listItem>
+                  <codeEntityReference autoUpgrade="true">T:BUILDLet.Standard.Utilities.HtmlElement</codeEntityReference> class
+                </listItem>
+                <listItem>
+                  <codeEntityReference autoUpgrade="true">T:BUILDLet.Standard.Utilities.HtmlText</codeEntityReference> class
+                </listItem>
+                <listItem>
+                  <codeEntityReference autoUpgrade="true">T:BUILDLet.Standard.Utilities.HtmlComment</codeEntityReference> class
+                </listItem>
+                <listItem>
+                  <codeEntityReference autoUpgrade="true">T:BUILDLet.Standard.Utilities.HtmlWhiteSpace</codeEntityReference> class
+                </listItem>
+                <listItem>
+                  <codeEntityReference autoUpgrade="true">T:BUILDLet.Standard.Utilities.HtmlContentType</codeEntityReference> enumeration type
+                </listItem>
+              </list>
+              
+            </para>
+          </listItem>
+
+          <listItem>
+            <para>
+              <codeEntityReference autoUpgrade="true">T:BUILDLet.Standard.Utilities.XPathSyntaxParser</codeEntityReference> class
+              was added.
+            </para>
+          </listItem>
+
+          <listItem>
+            <para>
+              Refactoring of 
+              <codeEntityReference autoUpgrade="true">T:BUILDLet.Standard.Utilities.PrivateProfileLine</codeEntityReference> class,
+              <codeEntityReference autoUpgrade="true">T:BUILDLet.Standard.Utilities.PrivateProfileSection</codeEntityReference> class,
+              <codeEntityReference autoUpgrade="true">T:BUILDLet.Standard.Utilities.PrivateProfile</codeEntityReference> class
+              and unit tests for these were taken.
+          </para>
+          </listItem>
+
+          <listItem>
+            <para>
+              The following members ware removed.
+              
+              <list class="bullet">
+                <listItem>
+                  <codeEntityReference autoUpgrade="true">T:BUILDLet.Standard.Utilities.PrivateProfileSection</codeEntityReference>.<codeInline>StringComparer</codeInline> Property,
+                </listItem>
+                <listItem>
+                  <codeEntityReference autoUpgrade="true">T:BUILDLet.Standard.Utilities.PrivateProfileLine</codeEntityReference>.<codeInline>SectionLineMatchPattern</codeInline> Property and
+                </listItem>
+                <listItem>
+                  <codeEntityReference autoUpgrade="true">T:BUILDLet.Standard.Utilities.PrivateProfileLine</codeEntityReference>.<codeInline>Parse</codeInline> Method
+                </listItem>
+              </list>
+              
+            </para>
+          </listItem>
+
+        </list>
+
+			</content>
+		</section>
+
+		<relatedTopics>
+			<link xlink:href="d093b825-0d18-4f2f-bf8e-81bc018b8f6f" />
+		</relatedTopics>
+
+	</developerConceptualDocument>
+</topic>

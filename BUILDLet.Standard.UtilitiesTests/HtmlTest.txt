@@ -1,0 +1,48 @@
+<!DOCTYPE>
+abc
+ABC
+abc<html
+ABC<HTML
+abc< html
+abc< 	html
+abc<	html
+abc<html>
+abc<html>xxx
+abc</html bcx
+abc</ html
+abc</html>
+abc</html>xxx
+<html
+<html xyz
+<html>
+<html xyz>abc<
+<html xyz efg>abc<
+<html xyz=xxx>abc<
+<html xyz='xxx'>abc<
+<html xyz="xxx">abc<
+<html xyz="xxx">abc
+<html xyz='xxx' efg='eee'>abc<
+<html>abc<
+<html>abc</
+<html>abc</abc>
+<html>abc</abc>xxx
+<html>abc<abc
+</html>
+</html xyz
+<A>
+</A>
+
+<!--Comment-->
+<!---Comment-->
+<!----Comment-->
+<!-->--Comment-->
+<!--->-Comment-->
+<!---->Comment-->
+
+
+<!-- Comment <!-- Comment -->
+<!-- Comment --> Comment -->
+<!-- Comment --!> Comment -->
+<!-- Comment --!>
+<!-- Comment <!--->
+

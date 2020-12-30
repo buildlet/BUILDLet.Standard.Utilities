@@ -40,16 +40,32 @@ namespace BUILDLet.Standard.Utilities.Tests
         public abstract class PrivateProfileTestParameter : TestParameter<object[]>
         {
             public string FilePath;
-
             public string[] SectionNames = null;
             public string[][][] Entries = null;
             public string[] RawLines = null;
 
-            // GET Expected
-            protected object[] GetExpected() => new object[] { this.SectionNames, this.Entries, this.RawLines };
+            // GET original conetnt of Test File to be read initially
+            public abstract string[] GetOriginalTestFileContent();
 
-            // GET Object[] from Section
-            protected object[] GetTestData(PrivateProfile profile)
+
+            // ARRANGE
+            public override void Arrange(out object[] expected)
+            {
+                // SET Expected
+                expected = new object[] { this.SectionNames, this.Entries, this.RawLines };
+
+
+                // Create original conetnt of Test File to be read initially
+                var content = new StringBuilder();
+                foreach (var line in this.GetOriginalTestFileContent()) { content.Append(line + PrivateProfile.LineBreakExpression); }
+
+                // Write content to file
+                File.WriteAllText(this.FilePath, content.ToString());
+            }
+
+
+            // Utility to convert Section into Object[]
+            public static object[] ConvertProfileToObjectArray(PrivateProfile profile)
             {
                 // Copy Section Names
                 string[] section_names = new string[profile.Sections.Count];
@@ -74,11 +90,12 @@ namespace BUILDLet.Standard.Utilities.Tests
                 // RETURN
                 return new object[]
                 {
-                    SectionNames = section_names,
-                    Entries = entries,
-                    RawLines = profile.GetRawLines()
+                    section_names,
+                    entries,
+                    profile.GetRawLines()
                 };
             }
+
 
             // ASSERT
             public override void Assert<TItem>(TItem expected, TItem actual)
@@ -92,55 +109,26 @@ namespace BUILDLet.Standard.Utilities.Tests
                 string[] actual_RawLines = (expected as object[])[2] as string[];
 
 
-                // Print Number of Sections
-                Console.WriteLine($"Number of Sections: Expected = {expected_SectionNames.Length}, Actual = {actual_SectionNames.Length}");
+                // Print Blank Line
+                Console.WriteLine();
 
-                // ASSERT Number of Sections
+                // Print Number of Section Names and Sections (Entries)
+                Console.WriteLine($"Number of Section Names (Sections) : Expected = {expected_SectionNames.Length}, Actual = {actual_SectionNames.Length}");
+                Console.WriteLine($"Number of Sections (Entries): Expected = {expected_Entries.Length}, Actual = {actual_Entries.Length}");
+
+                // ASSERT Number of Section Names and Sections (Entries); and these should be the same number
                 Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(expected_SectionNames.Length, actual_SectionNames.Length);
+                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(expected_Entries.Length, actual_Entries.Length);
+                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(actual_SectionNames.Length, actual_Entries.Length);
+
 
                 // for Sections
                 for (int i = 0; i < expected_SectionNames.Length; i++)
                 {
-                    // Print Section Name
-                    Console.WriteLine($"Section Name [{i}]: Expected\t= \"{expected_SectionNames[i]}\"");
-                    Console.WriteLine($"Section Name [{i}]: Actual\t= \"{actual_SectionNames[i]}\"");
-
-                    // ASSERT Section Name
-                    Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(expected_SectionNames[i], actual_SectionNames[i]);
-                }
-
-
-                // Print Number of Entries
-                Console.WriteLine($"Number of Entries: Expected = {expected_Entries.Length}, Actual = {actual_Entries.Length}");
-
-                // ASSERT Number of Entries
-                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(expected_Entries.Length, actual_Entries.Length);
-
-                // for Entries
-                for (int i = 0; i < expected_Entries.Length; i++)
-                {
-                    // Print Number of Entries[i]
-                    Console.WriteLine($"Number of Entries[{i}]: Expected = {expected_Entries[i].Length}, Actual = {actual_Entries[i].Length}");
-
-                    // ASSERT Number of Entries[i]
-                    Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(expected_Entries[i].Length, actual_Entries[i].Length);
-
-                    for (int j = 0; j < expected_Entries[i].Length; j++)
-                    {
-                        // // Print Numbers in Entry
-                        // Console.WriteLine($"Numbers in Entries[{i}][{j}]: Expected = {expected_Entries[i][j].Length}, Actual = {actual_Entries[i][j].Length}");
-
-                        // // ASSERT Numbers in Entry
-                        // Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(expected_Entries[i][j].Length, actual_Entries[i][j].Length);
-
-                        // Print Entry (KEY and VALUE)
-                        Console.WriteLine($"Entries[{i}][{j}]: Expected\t(Key, Value) = (\"{expected_Entries[i][j][0]}\", \"{expected_Entries[i][j][1]}\")");
-                        Console.WriteLine($"Entries[{i}][{j}]: Actual\t(Key, Value) = (\"{actual_Entries[i][j][0]}\", \"{actual_Entries[i][j][1]}\")");
-
-                        // ASSERT Entry
-                        Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(expected_Entries[i][j][0], actual_Entries[i][j][0]);
-                        Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(expected_Entries[i][j][1], actual_Entries[i][j][1]);
-                    }
+                    // ASSERT Section
+                    PrivateProfileSectionTests.AssertSection(
+                        expected_SectionNames[i], expected_Entries[i], null,
+                        actual_SectionNames[i], actual_Entries[i], null);
                 }
 
 
@@ -149,6 +137,7 @@ namespace BUILDLet.Standard.Utilities.Tests
 
                 // ASSERT Number of Raw Lines
                 Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(expected_RawLines.Length, actual_RawLines.Length);
+
 
                 // for Raw Lines
                 for (int i = 0; i < expected_RawLines.Length; i++)
@@ -188,7 +177,7 @@ namespace BUILDLet.Standard.Utilities.Tests
                 var j = 0;
                 foreach (var key in profile.Sections[section_name].Entries.Keys)
                 {
-                    Console.WriteLine(" Entries[{0}][{1}] (Key, Value) = (\"{2}\", \"{3}\")", i, j++,
+                    Console.WriteLine("    Entries[{0}][{1}] (Key, Value) = (\"{2}\", \"{3}\")", i, j++,
                         key, (profile.Sections[section_name].Entries[key] is null ? "null" : $"\"{profile.Sections[section_name].Entries[key]}\""));
                 }
             }
@@ -199,18 +188,9 @@ namespace BUILDLet.Standard.Utilities.Tests
             {
                 Console.WriteLine($"Raw Lines[{k++}] = \"{line}\"");
             }
-        }
 
-
-        // Create Test File
-        public static void CreateTestFile(string path, string[] contents)
-        {
-            // Create Content of Test File
-            var content = new StringBuilder();
-            foreach (var line in contents) { content.Append(line + PrivateProfile.LineBreakExpression); }
-
-            // Craete Test File
-            File.WriteAllText(path, content.ToString());
+            // Print Blank Line
+            Console.WriteLine();
         }
 
 
@@ -221,15 +201,9 @@ namespace BUILDLet.Standard.Utilities.Tests
         // TestParameter for ReadProfileTest
         public class ReadProfileTestParameter : PrivateProfileTestParameter
         {
-            // ARRANGE
-            public override void Arrange(out object[] expected)
-            {
-                // SET Expected
-                expected = this.GetExpected();
+            // GET original conetnt of Test File to be read initially
+            public override string[] GetOriginalTestFileContent() => this.RawLines;
 
-                // Create Test File
-                PrivateProfileTests.CreateTestFile(this.FilePath, this.RawLines);
-            }
 
             // ACT
             public override void Act(out object[] actual)
@@ -238,17 +212,41 @@ namespace BUILDLet.Standard.Utilities.Tests
                 var profile = new PrivateProfile(this.FilePath);
 
                 // Print Profile
-                PrivateProfileTests.PrintProfile(profile);
                 Console.WriteLine();
+                Console.WriteLine("Print Profile:");
+                PrivateProfileTests.PrintProfile(profile);
 
                 // GET Actual
-                actual = this.GetTestData(profile);
+                actual = PrivateProfileTestParameter.ConvertProfileToObjectArray(profile);
             }
         }
 
         // Test Data for Reading Profile
         public static IEnumerable<object[]> ReadProfileTestData => new List<object[]>()
         {
+            // object[]
+            // {
+            //    // File Path
+            //    string,
+            //
+            //    // Sections
+            //    new string[],
+            //
+            //    // Entries
+            //    new string[][][]
+            //    {
+            //        new string[][]
+            //        {
+            //            new string[],
+            //            new string[],
+            //            :
+            //        }
+            //    },
+            //
+            //    // Raw Lines
+            //    string[]
+            // }
+
             // 1)
             // (None)
 
@@ -395,15 +393,9 @@ namespace BUILDLet.Standard.Utilities.Tests
             public abstract void ChangeProfile(PrivateProfile profile);
 
 
-            // ARRANGE
-            public override void Arrange(out object[] expected)
-            {
-                // SET Expected
-                expected = this.GetExpected();
+            // GET original conetnt of Test File to be read initially
+            public override string[] GetOriginalTestFileContent() => this.BeforeRawLines;
 
-                // Create Original Test File
-                PrivateProfileTests.CreateTestFile(this.FilePath, this.BeforeRawLines);
-            }
 
             // ACT
             public override void Act(out object[] actual)
@@ -412,17 +404,17 @@ namespace BUILDLet.Standard.Utilities.Tests
                 using (var profile = new PrivateProfile(this.FilePath, false))
                 {
                     // Print Profile
+                    Console.WriteLine();
                     Console.WriteLine("Before Change:");
                     PrivateProfileTests.PrintProfile(profile);
-                    Console.WriteLine();
 
                     // ACT (1): Change Profile
                     this.ChangeProfile(profile);
 
                     // Print Profile
+                    Console.WriteLine();
                     Console.WriteLine("After Change:");
                     PrivateProfileTests.PrintProfile(profile);
-                    Console.WriteLine();
 
                     // ACT (2): Write to File
                     profile.Write();
@@ -432,12 +424,12 @@ namespace BUILDLet.Standard.Utilities.Tests
                 using (var profile = new PrivateProfile(this.FilePath))
                 {
                     // Print Profile
+                    Console.WriteLine();
                     Console.WriteLine("Re-Read Profile:");
                     PrivateProfileTests.PrintProfile(profile);
-                    Console.WriteLine();
 
                     // SET Actual
-                    actual = this.GetTestData(profile);
+                    actual = PrivateProfileTestParameter.ConvertProfileToObjectArray(profile);
                 }
             }
         }
@@ -464,6 +456,33 @@ namespace BUILDLet.Standard.Utilities.Tests
         // TestData for UpdateValueTest
         public static IEnumerable<object[]> UpdateValueTestData => new List<object[]>()
         {
+            // object[]
+            // {
+            //    // File Path
+            //    string,
+            //
+            //    // Sections
+            //    new string[],
+            //
+            //    // Entries
+            //    new string[][][],
+            //
+            //    // Raw Lines
+            //    string[],
+            //
+            //    // BeforeRawLines: Additional Data for UpdateValueTestData (1)
+            //    string[],
+            //
+            //    // Section: Additional Data for UpdateValueTestData (2)
+            //    string,
+            //
+            //    // Key: Additional Data for UpdateValueTestData (3)
+            //    string,
+            //
+            //    // New Value: Additional Data for UpdateValueTestData (4)
+            //    string
+            // }
+
             // 1)
             // (None)
 
@@ -672,6 +691,33 @@ namespace BUILDLet.Standard.Utilities.Tests
         // TestData for AddEntryTest
         public static IEnumerable<object[]> AddEntryTestData => new List<object[]>()
         {
+            // object[]
+            // {
+            //    // File Path
+            //    string,
+            //
+            //    // Sections
+            //    new string[],
+            //
+            //    // Entries
+            //    new string[][][],
+            //
+            //    // Raw Lines
+            //    string[],
+            //
+            //    // BeforeRawLines: Additional Data for AddEntryTestData (1)
+            //    string[],
+            //
+            //    // Section: Additional Data for AddEntryTestData (2)
+            //    string,
+            //
+            //    // Key: Additional Data for AddEntryTestData (3)
+            //    string,
+            //
+            //    // Value: Additional Data for AddEntryTestData (4)
+            //    string,
+            // }
+
             // 1)
             // (None)
 
@@ -991,6 +1037,33 @@ namespace BUILDLet.Standard.Utilities.Tests
         // TestData for RemoveEntryTest
         public static IEnumerable<object[]> RemoveEntryTestData => new List<object[]>()
         {
+            // object[]
+            // {
+            //    // File Path
+            //    string,
+            //
+            //    // Sections
+            //    new string[],
+            //
+            //    // Entries
+            //    new string[][][],
+            //
+            //    // Raw Lines
+            //    string[],
+            //
+            //    // BeforeRawLines: Additional Data for RemoveEntryTestData (1)
+            //    string[],
+            //
+            //    // Section: Additional Data for RemoveEntryTestData (2)
+            //    string,
+            //
+            //    // Key: Additional Data for RemoveEntryTestData (3)
+            //    string,
+            //
+            //    // Result: Additional Data for RemoveEntryTestData (4)
+            //    bool
+            // }
+
             // 1)
             // (None)
 
@@ -1165,7 +1238,7 @@ namespace BUILDLet.Standard.Utilities.Tests
 
 
         // ----------------------------------------------------------------
-        // Tests of Import Profile
+        // Tests of Import / Export Profile
         // ----------------------------------------------------------------
 
         // TestParameter for ImportProfileTest
@@ -1186,8 +1259,9 @@ namespace BUILDLet.Standard.Utilities.Tests
                 profile.Import(this.RawLines);
 
                 // Print Profile
-                PrivateProfileTests.PrintProfile(profile);
                 Console.WriteLine();
+                Console.WriteLine("Print Profile:");
+                PrivateProfileTests.PrintProfile(profile);
 
                 // GET Actual
                 actual = profile.Export();

@@ -29,145 +29,6 @@ namespace BUILDLet.Standard.Utilities.Tests
     public class PrivateProfileLineTests
     {
         // ----------------------------------------------------------------
-        // Not Initialized Exception Tests
-        // ----------------------------------------------------------------
-
-        [TestMethod]
-        [TestCategory("Exception")]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void SectionNameNotInitializedExceptionTest() => _ = new PrivateProfileLine().SectionName;
-
-        [TestMethod]
-        [TestCategory("Exception")]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void KeyNotInitializedExceptionTest() => _ = new PrivateProfileLine().Key;
-
-        [TestMethod]
-        [TestCategory("Exception")]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void ValueNotInitializedExceptionTest() => _ = new PrivateProfileLine().Value;
-
-
-        // ----------------------------------------------------------------
-        // Format Exception Tests
-        // ----------------------------------------------------------------
-
-        [DataTestMethod]
-        [TestCategory("Exception")]
-        [ExpectedException(typeof(FormatException))]
-        [DataRow("[]")]
-        [DataRow("=a")]
-        public void InvalidLineFormatExceptionTest(string line) => PrivateProfileLine.Parse(line, out _, out _, out _);
-
-
-        // ----------------------------------------------------------------
-        // Base Type of TestParameter
-        // ----------------------------------------------------------------
-
-        // Base Type of TestParameter for PrivateProfileLine Class Tests
-        public abstract class LineTestParameter : TestParameter<object[]>
-        {
-            public PrivateProfileLineType LineType;
-            public string RawLine;
-            public string SectionName;
-            public string Key;
-            public string Value;
-
-            // ARRANGE: SET Expected
-            public override void Arrange(out object[] expected) =>
-                expected = new object[] { this.LineType, this.RawLine, this.SectionName, this.Key, this.Value };
-        }
-
-
-        // ----------------------------------------------------------------
-        // Tests of New Line by Constructor w/o Parameter
-        // ----------------------------------------------------------------
-
-        // TestParameter for NewLineTest
-        public class NewLineTestParameter : LineTestParameter
-        {
-            // ACT
-            public override void Act(out object[] actual)
-            {
-                // Prepare PrivateProfileLine
-                PrivateProfileLine line;
-
-                switch (this.LineType)
-                {
-                    case PrivateProfileLineType.NotInitialized:
-                        throw new NotSupportedException();
-
-                    case PrivateProfileLineType.Section:
-                        line = new PrivateProfileLine() { SectionName = this.SectionName };
-                        actual = new object[] { line.LineType, line.RawLine, line.SectionName, null, null };
-                        break;
-
-                    case PrivateProfileLineType.Entry:
-                        line = new PrivateProfileLine() { Key = this.Key, Value = this.Value };
-                        actual = new object[] { line.LineType, line.RawLine, null, line.Key, line.Value };
-                        break;
-
-                    case PrivateProfileLineType.Other:
-                        throw new NotSupportedException();
-
-                    default:
-                        throw new InvalidOperationException();
-                }
-            }
-        }
-
-        [DataTestMethod]
-        // Common Test Case for NewLineTest, ParseMethodTest and NewLineFromRawLineTest.
-        [DataRow(PrivateProfileLineType.Section, "[SECTION]", "SECTION", null, null)]
-        [DataRow(PrivateProfileLineType.Section, "[Valid[Section]", "Valid[Section", null, null)]
-        [DataRow(PrivateProfileLineType.Section, "[Valid]Section]", "Valid]Section", null, null)]
-        [DataRow(PrivateProfileLineType.Section, "[Valid[Valid]Section]", "Valid[Valid]Section", null, null)]
-        [DataRow(PrivateProfileLineType.Section, "[Section=Valid]", "Section=Valid", null, null)]
-        [DataRow(PrivateProfileLineType.Entry, "KEY=VALUE", null, "KEY", "VALUE")]
-        [DataRow(PrivateProfileLineType.Entry, "KEY", null, "KEY", null)]
-        [DataRow(PrivateProfileLineType.Entry, "KEY=", null, "KEY", "")]
-        [DataRow(PrivateProfileLineType.Entry, "KEY=VALUE=Valid", null, "KEY", "VALUE=Valid")]
-        //
-        // Common Test Case only for NewLineTest and NewLineFromRawLineTest.
-        [DataRow(PrivateProfileLineType.Section, null, "", null, null, DisplayName = "Null Section")]
-        public void NewLineTest(PrivateProfileLineType type, string line, string section, string key, string value)
-        {
-            // SET Parameter
-            NewLineTestParameter param = new NewLineTestParameter
-            {
-                LineType = type,
-                RawLine = line,
-                SectionName = section,
-                Key = key,
-                Value = value
-            };
-
-            // ASSERT
-            param.Validate();
-        }
-
-
-        // ----------------------------------------------------------------
-        // Invalid Operation (LineType) Exception Tests
-        // ----------------------------------------------------------------
-
-        [TestMethod]
-        [TestCategory("Exception")]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void SectionNameInvalidOperationExceptionTest() => _ = new PrivateProfileLine() { Key = "KEY", Value = "VALUE" }.SectionName;
-
-        [TestMethod]
-        [TestCategory("Exception")]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void KeyInvalidOperationExceptionTest() => _ = new PrivateProfileLine() { SectionName = "SECTION" }.Key;
-
-        [TestMethod]
-        [TestCategory("Exception")]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void ValueInvalidOperationExceptionTest() => _ = new PrivateProfileLine() { SectionName = "SECTION" }.Value;
-
-
-        // ----------------------------------------------------------------
         // Tests of Trim Method
         // ----------------------------------------------------------------
 
@@ -216,25 +77,110 @@ namespace BUILDLet.Standard.Utilities.Tests
 
 
         // ----------------------------------------------------------------
-        // Tests of Parse Method
+        // Not Initialized Exception Tests
         // ----------------------------------------------------------------
 
-        // TestParameter for ParseMethodTest
-        public class ParseMethodTestParameter : LineTestParameter
+        [TestMethod]
+        [TestCategory("Exception")]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void SectionNameNotInitializedTest() => _ = new PrivateProfileLine().SectionName;
+
+        [TestMethod]
+        [TestCategory("Exception")]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void KeyNotInitializedTest() => _ = new PrivateProfileLine().Key;
+
+        [TestMethod]
+        [TestCategory("Exception")]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void ValueNotInitializedTest() => _ = new PrivateProfileLine().Value;
+
+
+        // ----------------------------------------------------------------
+        // Format Exception Tests
+        // ----------------------------------------------------------------
+
+        [DataTestMethod]
+        [TestCategory("Exception")]
+        [ExpectedException(typeof(FormatException))]
+        [DataRow("[]")]
+        [DataRow("=a")]
+        public void InvalidLineFormatTest(string line) => _ = new PrivateProfileLine(line);
+
+
+        // ----------------------------------------------------------------
+        // Invalid Operation (LineType) Exception Tests
+        // ----------------------------------------------------------------
+
+        [TestMethod]
+        [TestCategory("Exception")]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void SectionNameInvalidOperationTest() => _ = new PrivateProfileLine() { Key = "KEY", Value = "VALUE" }.SectionName;
+
+        [TestMethod]
+        [TestCategory("Exception")]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void KeyInvalidOperationTest() => _ = new PrivateProfileLine() { SectionName = "SECTION" }.Key;
+
+        [TestMethod]
+        [TestCategory("Exception")]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void ValueInvalidOperationTest() => _ = new PrivateProfileLine() { SectionName = "SECTION" }.Value;
+
+
+        // ----------------------------------------------------------------
+        // Base Type of TestParameter
+        // ----------------------------------------------------------------
+
+        // Base Type of TestParameter for PrivateProfileLine Class Tests
+        public abstract class LineTestParameter : TestParameter<object[]>
+        {
+            public PrivateProfileLineType LineType;
+            public string RawLine;
+            public string SectionName;
+            public string Key;
+            public string Value;
+
+
+            // ARRANGE: SET Expected
+            // { LineType, RawLine, Section, Key, Value }
+            public override void Arrange(out object[] expected) =>
+                expected = LineTestParameter.ConvertToObjectArray(this.LineType, this.RawLine, this.SectionName, this.Key, this.Value);
+
+
+            // Utility to convert members of parameter into object array
+            public static object[] ConvertToObjectArray(PrivateProfileLineType type, string line, string section, string key, string value) =>
+                new object[] { type, line, section, key, value };
+        }
+
+
+        // ----------------------------------------------------------------
+        // Tests of New Line from Raw Line
+        // ----------------------------------------------------------------
+
+        // TestParameter for NewLineTest
+        public class NewLineTestParameter : LineTestParameter
         {
             // ACT
             public override void Act(out object[] actual)
             {
-                // GET Actual
-                var type = PrivateProfileLine.Parse(this.RawLine, out var section, out var key, out var value);
+                var line = new PrivateProfileLine(this.RawLine);
 
-                // SET Actual
-                actual = new object[] { type, this.RawLine, section, key, value };
+                actual = this.LineType switch
+                {
+                    PrivateProfileLineType.NotInitialized => throw new InvalidOperationException(),
+                    PrivateProfileLineType.Section => LineTestParameter.ConvertToObjectArray(line.LineType, line.RawLine, line.SectionName, null, null),
+                    PrivateProfileLineType.Entry => LineTestParameter.ConvertToObjectArray(line.LineType, line.RawLine, null, line.Key, line.Value),
+                    PrivateProfileLineType.Other => LineTestParameter.ConvertToObjectArray(line.LineType, line.RawLine, null, null, null),
+                    _ => throw new InvalidOperationException(),
+                };
             }
         }
 
         [DataTestMethod]
-        // Common Test Case for NewLineTest, ParseMethodTest and NewLineFromRawLineTest.
+        // (LineType, RawLine, Section Name, Key, Value)
+        //
+        // A) Test Cases Common for NewLineTest and NewLineWithObjectInitializerTest
         [DataRow(PrivateProfileLineType.Section, "[SECTION]", "SECTION", null, null)]
         [DataRow(PrivateProfileLineType.Section, "[Valid[Section]", "Valid[Section", null, null)]
         [DataRow(PrivateProfileLineType.Section, "[Valid]Section]", "Valid]Section", null, null)]
@@ -244,16 +190,17 @@ namespace BUILDLet.Standard.Utilities.Tests
         [DataRow(PrivateProfileLineType.Entry, "KEY", null, "KEY", null)]
         [DataRow(PrivateProfileLineType.Entry, "KEY=", null, "KEY", "")]
         [DataRow(PrivateProfileLineType.Entry, "KEY=VALUE=Valid", null, "KEY", "VALUE=Valid")]
+        [DataRow(PrivateProfileLineType.Section, null, "", null, null, DisplayName = "Null Section")]
         //
-        // Common Test Case only for ParseMethodTest and NewLineFromRawLineTest.
-        [DataRow(PrivateProfileLineType.Other, "", null, null, null, DisplayName = "String.Empty")]
+        // B) Test Cases only for NewLineTest
+        [DataRow(PrivateProfileLineType.Other, "", null, null, null, DisplayName = "Blank Line")]
         [DataRow(PrivateProfileLineType.Other, ";This is comment line.", null, null, null, DisplayName = "Comment Line")]
         [DataRow(PrivateProfileLineType.Section, "[SECTION] ;Comment", "SECTION", null, null, DisplayName = "Section Line with Comment")]
         [DataRow(PrivateProfileLineType.Entry, "KEY=VALUE", null, "KEY", "VALUE", DisplayName = "Entry Line with Comment")]
-        public void ParseMethodTest(PrivateProfileLineType type, string line, string section, string key, string value)
+        public void NewLineTest(PrivateProfileLineType type, string line, string section, string key, string value)
         {
             // SET Parameter
-            ParseMethodTestParameter param = new ParseMethodTestParameter
+            NewLineTestParameter param = new NewLineTestParameter
             {
                 LineType = type,
                 RawLine = line,
@@ -268,30 +215,52 @@ namespace BUILDLet.Standard.Utilities.Tests
 
 
         // ----------------------------------------------------------------
-        // Tests of New Line from Raw Lines
+        // Tests of New Line with Object Initializer
         // ----------------------------------------------------------------
 
-        // TestParameter for NewLineFromRawLineTest
-        public class NewLineFromRawLineTestParameter : LineTestParameter
+        // TestParameter for NewLineWithObjectInitializerTest
+        public class NewLineWithObjectInitializerTestParameter : LineTestParameter
         {
             // ACT
             public override void Act(out object[] actual)
             {
-                var line = new PrivateProfileLine(this.RawLine);
+                // Prepare PrivateProfileLine
+                PrivateProfileLine line;
 
-                actual = this.LineType switch
+                switch (this.LineType)
                 {
-                    PrivateProfileLineType.NotInitialized => throw new NotSupportedException(),
-                    PrivateProfileLineType.Section => new object[] { line.LineType, line.RawLine, line.SectionName, null, null },
-                    PrivateProfileLineType.Entry => new object[] { line.LineType, line.RawLine, null, line.Key, line.Value },
-                    PrivateProfileLineType.Other => new object[] { line.LineType, line.RawLine, null, null, null },
-                    _ => throw new InvalidOperationException(),
-                };
+                    case PrivateProfileLineType.NotInitialized:
+                        throw new InvalidOperationException();
+
+                    case PrivateProfileLineType.Section:
+
+                        // ACT
+                        line = new PrivateProfileLine() { SectionName = this.SectionName };
+
+                        actual = LineTestParameter.ConvertToObjectArray(line.LineType, line.RawLine, line.SectionName, null, null);
+                        break;
+
+                    case PrivateProfileLineType.Entry:
+
+                        // ACT
+                        line = new PrivateProfileLine() { Key = this.Key, Value = this.Value };
+
+                        actual = LineTestParameter.ConvertToObjectArray(line.LineType, line.RawLine, null, line.Key, line.Value);
+                        break;
+
+                    case PrivateProfileLineType.Other:
+                        throw new NotSupportedException();
+
+                    default:
+                        throw new InvalidOperationException();
+                }
             }
         }
 
         [DataTestMethod]
-        // Common Test Case for NewLineTest, ParseMethodTest and NewLineFromRawLineTest.
+        // (LineType, RawLine, Section Name, Key, Value)
+        //
+        // A) Test Cases Common for NewLineTest and NewLineWithObjectInitializerTest
         [DataRow(PrivateProfileLineType.Section, "[SECTION]", "SECTION", null, null)]
         [DataRow(PrivateProfileLineType.Section, "[Valid[Section]", "Valid[Section", null, null)]
         [DataRow(PrivateProfileLineType.Section, "[Valid]Section]", "Valid]Section", null, null)]
@@ -301,19 +270,11 @@ namespace BUILDLet.Standard.Utilities.Tests
         [DataRow(PrivateProfileLineType.Entry, "KEY", null, "KEY", null)]
         [DataRow(PrivateProfileLineType.Entry, "KEY=", null, "KEY", "")]
         [DataRow(PrivateProfileLineType.Entry, "KEY=VALUE=Valid", null, "KEY", "VALUE=Valid")]
-        //
-        // Common Test Case only for NewLineTest and NewLineFromRawLineTest.
         [DataRow(PrivateProfileLineType.Section, null, "", null, null, DisplayName = "Null Section")]
-        //
-        // Common Test Case only for ParseMethodTest and NewLineFromRawLineTest.
-        [DataRow(PrivateProfileLineType.Other, "", null, null, null, DisplayName = "Blank Line")]
-        [DataRow(PrivateProfileLineType.Other, ";This is comment line.", null, null, null, DisplayName = "Comment Line")]
-        [DataRow(PrivateProfileLineType.Section, "[SECTION] ;Comment", "SECTION", null, null, DisplayName = "Section Line with Comment")]
-        [DataRow(PrivateProfileLineType.Entry, "KEY=VALUE", null, "KEY", "VALUE", DisplayName = "Entry Line with Comment")]
-        public void NewLineFromRawLineTest(PrivateProfileLineType type, string line, string section, string key, string value)
+        public void NewLineWithObjectInitializerTest(PrivateProfileLineType type, string line, string section, string key, string value)
         {
             // SET Parameter
-            NewLineFromRawLineTestParameter param = new NewLineFromRawLineTestParameter
+            NewLineWithObjectInitializerTestParameter param = new NewLineWithObjectInitializerTestParameter
             {
                 LineType = type,
                 RawLine = line,
@@ -362,7 +323,7 @@ namespace BUILDLet.Standard.Utilities.Tests
                         line.SectionName = this.SectionName;
 
                         // RETURN
-                        return new object[] { line.LineType, line.RawLine, line.SectionName, null, null };
+                        return LineTestParameter.ConvertToObjectArray(line.LineType, line.RawLine, line.SectionName, null, null);
 
                     case SectionKeyValuePropertiesChangeTestTarget.Key:
 
@@ -373,7 +334,7 @@ namespace BUILDLet.Standard.Utilities.Tests
                         line.Key = this.Key;
 
                         // RETURN
-                        return new object[] { line.LineType, line.RawLine, null, line.Key, line.Value };
+                        return LineTestParameter.ConvertToObjectArray(line.LineType, line.RawLine, null, line.Key, line.Value);
 
                     case SectionKeyValuePropertiesChangeTestTarget.Value:
 
@@ -384,7 +345,7 @@ namespace BUILDLet.Standard.Utilities.Tests
                         line.Value = this.Value;
 
                         // RETURN
-                        return new object[] { line.LineType, line.RawLine, null, line.Key, line.Value };
+                        return LineTestParameter.ConvertToObjectArray(line.LineType, line.RawLine, null, line.Key, line.Value);
 
                     default:
                         throw new InternalTestFailureException();
@@ -405,6 +366,7 @@ namespace BUILDLet.Standard.Utilities.Tests
         }
 
         [DataTestMethod]
+        // (LineType, RawLine, Section Name, Key, Value, beforeChange)
         [DataRow(PrivateProfileLineType.Section, "[AfterSection]", "AfterSection", null, null, "BeforeSection")]
         [DataRow(PrivateProfileLineType.Section, "[AfterSection]", "AfterSection", null, null, "BeforeSection ")]
         [DataRow(PrivateProfileLineType.Section, "[AfterSection]", "AfterSection", null, null, "BeforeSection  ")]
@@ -442,6 +404,7 @@ namespace BUILDLet.Standard.Utilities.Tests
         }
 
         [DataTestMethod]
+        // (LineType, RawLine, Section Name, Key, Value, beforeChange)
         [DataRow(PrivateProfileLineType.Entry, "AfterKey=VALUE", null, "AfterKey", "VALUE", "BeforeKey")]
         [DataRow(PrivateProfileLineType.Entry, "AfterKey=VALUE", null, "AfterKey", "VALUE", "BeforeKey ")]
         [DataRow(PrivateProfileLineType.Entry, "AfterKey=VALUE", null, "AfterKey", "VALUE", " BeforeKey ")]
@@ -475,6 +438,7 @@ namespace BUILDLet.Standard.Utilities.Tests
         }
 
         [DataTestMethod]
+        // (LineType, RawLine, Section Name, Key, Value, beforeChange)
         [DataRow(PrivateProfileLineType.Entry, "KEY=AfterValue", null, "KEY", "AfterValue", "BeforeValue")]
         [DataRow(PrivateProfileLineType.Entry, "KEY=AfterValue", null, "KEY", "AfterValue", "BeforeValue ")]
         [DataRow(PrivateProfileLineType.Entry, "KEY=AfterValue", null, "KEY", "AfterValue", " BeforeValue ")]
