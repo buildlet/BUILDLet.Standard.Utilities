@@ -61,6 +61,24 @@ namespace BUILDLet.Standard.Utilities.Properties {
         }
         
         /// <summary>
+        ///   Input data is not valid HTML format. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string HtmlElementInvalidFormatErrorMessage {
+            get {
+                return ResourceManager.GetString("HtmlElementInvalidFormatErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Invalid argument is specified. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string InvalidArgumentErrorMessage {
+            get {
+                return ResourceManager.GetString("InvalidArgumentErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Format is invalid. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string PrivateProfileInvalidFormatErrorMessage {
@@ -102,6 +120,15 @@ namespace BUILDLet.Standard.Utilities.Properties {
         internal static string PrivateProfileSectionNameAlreadyExistsErrorMessage {
             get {
                 return ResourceManager.GetString("PrivateProfileSectionNameAlreadyExistsErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Specified XPath expression is not supported. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string XPathNotSupportedExpressionErrorMessage {
+            get {
+                return ResourceManager.GetString("XPathNotSupportedExpressionErrorMessage", resourceCulture);
             }
         }
     }

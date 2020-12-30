@@ -40,10 +40,13 @@ namespace BUILDLet.Standard.Utilities
     /// セクションの名前は、先頭 (インデックス番号 <c>0</c>) の <see cref="PrivateProfileLine"/> に格納されます。
     /// </para>
     /// <para>
-    /// 名前のないセクションの場合の <see cref="PrivateProfileLine"/> コレクションの先頭は <c>null</c> です。
+    /// 大文字と小文字は区別されません。
     /// </para>
     /// <para>
-    /// 大文字と小文字は区別されません。
+    /// <note type="note">
+    /// 名前のないセクションの場合であっても、<see cref="PrivateProfileLine"/> コレクションの先頭は <see cref="PrivateProfileLine"/> です。<br/>
+    /// (<c>null</c> ではありません。)
+    /// </note>
     /// </para>
     /// </remarks>
     public class PrivateProfileSection
@@ -56,7 +59,7 @@ namespace BUILDLet.Standard.Utilities
         private readonly List<PrivateProfileLine> lines = new List<PrivateProfileLine>();
 
         // Inner Entries (Cash)
-        private readonly Dictionary<string, string> entries = new Dictionary<string, string>(PrivateProfileSection.StringComparer);
+        private readonly Dictionary<string, string> entries = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
 
         // ----------------------------------------------------------------------------------------------------
@@ -105,7 +108,7 @@ namespace BUILDLet.Standard.Utilities
                 if (i == 0)
                 {
                     // Validation (Line Type) for 1st line:
-                    if (lines[0].LineType != PrivateProfileLineType.Section)
+                    if (lines[i].LineType != PrivateProfileLineType.Section)
                     {
                         throw new ArgumentException(Resources.PrivateProfileInvalidLineTypeErrorMessage, nameof(lines));
                     }
@@ -126,39 +129,38 @@ namespace BUILDLet.Standard.Utilities
 
 
         /// <inheritdoc cref="PrivateProfile()"/>
-        /// <param name="content">
+        /// <param name="contents">
         /// INI ファイル (初期化ファイル) のセクション全体。
         /// </param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="content"/> に <c>null</c> が指定されました。
+        /// <paramref name="contents"/> に <c>null</c> が指定されました。
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// <paramref name="content"/> の要素に <c>null</c> または不正な値が含まれます。
+        /// <paramref name="contents"/> の要素に <c>null</c> または不正な値が含まれます。
         /// </exception>
-        public PrivateProfileSection(string[] content) : this()
+        public PrivateProfileSection(string[] contents) : this()
         {
             // Validation (Null Check):
-            if (content is null) { throw new ArgumentNullException(nameof(content)); }
+            if (contents is null) { throw new ArgumentNullException(nameof(contents)); }
 
             // APPEND Lines
-            for (int i = 0; i < content.Length; i++)
+            for (int i = 0; i < contents.Length; i++)
             {
                 // Validation (Null Check):
-                if (content[i] is null)
+                if (contents[i] is null)
                 {
-                    throw new ArgumentException(Resources.PrivateProfileInvalidFormatErrorMessage, nameof(content));
+                    throw new ArgumentException(Resources.PrivateProfileInvalidFormatErrorMessage, nameof(contents));
                 }
 
                 // NEW Line
-                var line = new PrivateProfileLine(content[i]);
+                var line = new PrivateProfileLine(contents[i]);
 
                 // Validation (Line Type) & Null Section Insertion:
                 if (i == 0)
                 {
-                    // for 1st content (Line)
-                    // (No Validation)
+                    // No Validation for 1st content (Line)
 
-                    // Check Line Type of 1st content (Line):
+                    // Check Line Type of 1st content (Line)
                     if (line.LineType != PrivateProfileLineType.Section)
                     {
                         // Insert Null Section as 1st element
@@ -170,7 +172,7 @@ namespace BUILDLet.Standard.Utilities
                     // Validation (Line Type) for other content (Line):
                     if (line.LineType != PrivateProfileLineType.Entry && line.LineType != PrivateProfileLineType.Other)
                     {
-                        throw new ArgumentException(Resources.PrivateProfileInvalidLineTypeErrorMessage, nameof(content));
+                        throw new ArgumentException(Resources.PrivateProfileInvalidLineTypeErrorMessage, nameof(contents));
                     }
                 }
 
@@ -181,18 +183,14 @@ namespace BUILDLet.Standard.Utilities
 
 
         // ----------------------------------------------------------------------------------------------------
-        // Static Properties
+        // Public, Protected Properties
         // ----------------------------------------------------------------------------------------------------
 
         /// <summary>
-        /// キーの比較規則に使用する文字列比較操作を表します。
+        /// このセクションに含まれる全てのエントリを <see cref="Dictionary{String, String}"/> として取得します。
         /// </summary>
-        public static StringComparer StringComparer { get; } = StringComparer.OrdinalIgnoreCase;
+        public ReadOnlyDictionary<string, string> Entries { get; protected set; }
 
-
-        // ----------------------------------------------------------------------------------------------------
-        // Public, Protected Properties
-        // ----------------------------------------------------------------------------------------------------
 
         /// <summary>
         /// このセクションの名前を取得または設定します。
@@ -238,30 +236,21 @@ namespace BUILDLet.Standard.Utilities
                     this.lines.Add(new PrivateProfileLine { SectionName = trimed_name });
 
 #if DEBUG
-                    Debug.WriteLine($"NEW Section Name: \"{this.Name}\"" + (string.IsNullOrEmpty(this.Name) ? " (Null Section)" : ""), DebugInfo.ShortName);
+                    Debug.WriteLine($"NEW Section Name \"{this.Name}\"" + (string.IsNullOrEmpty(this.Name) ? " (Null Section)" : ""), DebugInfo.ShortName);
 #endif
                 }
                 else
                 {
 #if DEBUG
-                    Debug.Write($"UPDATE Section Name: \"{this.Name}\"" + (string.IsNullOrEmpty(this.Name) ? " (Null Section)" : ""), DebugInfo.ShortName);
+                    Debug.Write($"UPDATE Section Name \"{this.Name}\"" + (string.IsNullOrEmpty(this.Name) ? " (Null Section)" : ""), DebugInfo.ShortName);
+                    Debug.WriteLine($" -> \"{trimed_name}\"" + (string.IsNullOrEmpty(trimed_name) ? " (Null Section)" : ""));
 #endif
 
                     // UPDATE Section Name
                     this.lines[0].SectionName = trimed_name;
-
-#if DEBUG
-                    Debug.WriteLine($" -> \"{this.Name}\"" + (string.IsNullOrEmpty(this.Name) ? " (Null Section)" : ""));
-#endif
                 }
             }
         }
-
-
-        /// <summary>
-        /// このセクションに含まれる全てのエントリーを <see cref="Dictionary{String, String}"/> として取得します。
-        /// </summary>
-        public ReadOnlyDictionary<string, string> Entries { get; protected set; }
 
 
         // ----------------------------------------------------------------------------------------------------
@@ -281,7 +270,7 @@ namespace BUILDLet.Standard.Utilities
         /// このセクションに新しい <see cref="PrivateProfileLine"/> クラスを追加します。
         /// </summary>
         /// <param name="line">
-        /// 追加する <see cref="PrivateProfileLine"/> クラス。
+        /// 追加する <see cref="PrivateProfileLine"/> クラス
         /// </param>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="line"/> に <c>null</c> が指定されました。
@@ -291,7 +280,7 @@ namespace BUILDLet.Standard.Utilities
             // Validation (Null Check):
             if (line is null) { throw new ArgumentNullException(nameof(line)); }
 
-            // Other Validations:
+            // Validations:
             if (this.lines.Count == 0)
             {
                 // for 1st Line
@@ -364,13 +353,13 @@ namespace BUILDLet.Standard.Utilities
 
 
         /// <summary>
-        /// 指定されたキーに対応するエントリーの値を更新します。
+        /// 指定されたキーに対応するエントリの値を更新します。
         /// </summary>
         /// <param name="key">
-        /// 検索キー。
+        /// 検索するエントリのキー
         /// </param>
         /// <param name="value">
-        /// 更新後の値。
+        /// 更新後のエントリの値
         /// </param>
         /// <remarks>
         /// <para>
@@ -428,19 +417,18 @@ namespace BUILDLet.Standard.Utilities
 
 
         /// <summary>
-        /// 指定されたキーに対応するエントリーの値を削除します。
+        /// 指定されたキーに対応するエントリの値を削除します。
         /// </summary>
         /// <param name="key">
-        /// 削除するエントリーのキー。
+        /// 削除するエントリのキー
         /// </param>
         /// <returns>
         /// <para>
-        /// エントリーが見つかり、正常に削除された場合は <c>true</c>。
-        /// それ以外の場合は <c>false</c>。
+        /// エントリが見つかり、正常に削除された場合は <c>true</c> を返し、それ以外の場合は <c>false</c> を返します。
         /// </para>
         /// <para>
         /// <note type="note">
-        /// このメソッドは、<paramref name="key"/> がエントリーに見つからなかった場合にも <c>false</c> を返します。
+        /// このメソッドは、<paramref name="key"/> がエントリに見つからなかった場合にも <c>false</c> を返します。
         /// </note>
         /// </para>
         /// </returns>
@@ -615,6 +603,7 @@ namespace BUILDLet.Standard.Utilities
         // ----------------------------------------------------------------------------------------------------
 
         // Get Index of KEY
-        private int IndexOf(string key) => this.lines.FindIndex(line => (line?.LineType == PrivateProfileLineType.Entry) && (PrivateProfileSection.StringComparer.Compare(key.Trim(), line?.Key) == 0));
+        private int IndexOf(string key) =>
+            this.lines.FindIndex(line => (line?.LineType == PrivateProfileLineType.Entry) && (StringComparer.OrdinalIgnoreCase.Compare(key.Trim(), line?.Key) == 0));
     }
 }

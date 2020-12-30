@@ -71,8 +71,8 @@ namespace BUILDLet.Standard.Utilities
         /// </param>
         /// <remarks>
         /// <paramref name="line"/> に <c>null</c> を指定すると、名前のないセクション行が作成され、
-        /// <see cref="PrivateProfileLine.LineType"/> および <see cref="PrivateProfileLine.RawLine"/> には、
-        /// それぞれ、<see cref="PrivateProfileLineType.Section"/> および <c>null</c> が設定されます。
+        /// <see cref="PrivateProfileLine.LineType"/>、<see cref="PrivateProfileLine.SectionName"/> および <see cref="PrivateProfileLine.RawLine"/> には、
+        /// それぞれ、<see cref="PrivateProfileLineType.Section"/>、<see cref="string.Empty"/> および <c>null</c> が設定されます。
         /// </remarks>
         public PrivateProfileLine(string line) : this()
         {
@@ -82,18 +82,87 @@ namespace BUILDLet.Standard.Utilities
             // SET RawLine
             this.RawLine = line?.Trim();
 
-            // SET LineType
-            this.LineType = line is null ?
-                PrivateProfileLineType.Section :
-                PrivateProfileLine.Parse(this.RawLine, out this.section_name, out this.key, out this.value);
-
-            // Only for Null Section:
+            // SET LineType, Section, Key and Value
             if (line is null)
             {
+                // for Null Section
+                this.LineType = PrivateProfileLineType.Section;
                 this.section_name = string.Empty;
                 this.key = null;
                 this.value = null;
             }
+            else
+            {
+                // for Normal Section
+
+                // Initialize value(s)
+                this.LineType = PrivateProfileLineType.Other;
+                this.section_name = null;
+                this.key = null;
+                this.value = null;
+
+                // Remove Comment & Triming
+                string body = PrivateProfileLine.Trim(line);
+
+                // Parse Line
+                if (!string.IsNullOrWhiteSpace(body))
+                {
+                    // Check SECTION
+                    if (Regex.IsMatch(body, @"^\[.+\]$"))
+                    {
+                        // SECTION Line:
+                        // SECTION was found!
+
+                        // SET SECTION Name
+                        this.section_name = body.Substring(1, body.Length - 2).Trim();
+
+                        // SET Line Type
+                        this.LineType = PrivateProfileLineType.Section;
+                    }
+                    else if (Regex.IsMatch(body, @"^\[[ \t]*\]$"))
+                    {
+                        // Invalid SECTION Line:
+
+                        // ERROR
+                        throw new FormatException();
+                    }
+                    else
+                    {
+                        // NOT SECTION Line:
+
+                        // Check KEY
+                        if (body.Contains(Char.ToString('=')))
+                        {
+                            // KEY and VALUE:
+
+                            // Validation: No KEY;
+                            if (body[0] == '=') { throw new FormatException(); }
+
+                            // SET KEY and VALUE
+                            this.key = body.Substring(0, body.IndexOf('=')).Trim();
+                            this.value = body.EndsWith("=", StringComparison.OrdinalIgnoreCase) ? string.Empty : body.Substring(body.IndexOf('=') + 1).Trim();
+                        }
+                        else
+                        {
+                            // KEY only:
+
+                            // SET KEY and VALUE
+                            this.key = body.Trim();
+                            this.value = null;
+                        }
+
+                        // SET Line Type
+                        this.LineType = PrivateProfileLineType.Entry;
+                    }
+                }
+            }
+#if DEBUG
+            Debug.Write($"Line \"{line}\" (LineType = {this.LineType}", DebugInfo.ShortName);
+            Debug.WriteLine(", Section = {0}, Key = {1}, Value = {2})",
+                (this.section_name is null) ? "null" : $"\"{this.section_name}\"",
+                (this.key is null) ? "null" : $"\"{this.key}\"",
+                (this.value is null) ? "null" : $"\"{this.value}\"");
+#endif
         }
 
 
@@ -109,14 +178,6 @@ namespace BUILDLet.Standard.Utilities
         /// </remarks>
         public static char CommentIndicator { get; } = ';';
 
-        /// <summary>
-        /// セクション行を表す正規表現の文字列を表します。
-        /// </summary>
-        /// <remarks>
-        /// 文字列は <c>@"^\[.+\]$"</c> です。
-        /// </remarks>
-        public static string SectionLineMatchPattern { get; } = @"^\[.+\]$";
-
 
         // ----------------------------------------------------------------------------------------------------
         // Public, Protected Properties
@@ -129,6 +190,7 @@ namespace BUILDLet.Standard.Utilities
         /// 既定の設定は <see cref="PrivateProfileLineType.NotInitialized"/> です。
         /// </remarks>
         public PrivateProfileLineType LineType { get; protected set; } = PrivateProfileLineType.NotInitialized;
+
 
         /// <summary>
         /// RAW Line
@@ -196,7 +258,7 @@ namespace BUILDLet.Standard.Utilities
 
 
         /// <summary>
-        /// エントリー (キーと値の組み合わせ) のキーを取得および設定します。
+        /// エントリ (キーと値の組み合わせ) のキーを取得および設定します。
         /// </summary>
         /// <remarks>
         /// <c>null</c> および 空文字 (<see cref="string.Empty"/>) を指定することはできません。
@@ -256,7 +318,7 @@ namespace BUILDLet.Standard.Utilities
 
 
         /// <summary>
-        /// エントリー (キーと値の組み合わせ) のキーを取得および設定します。
+        /// エントリ (キーと値の組み合わせ) のキーを取得および設定します。
         /// </summary>
         /// <remarks>
         /// <c>null</c> および 空文字 (<see cref="string.Empty"/>) を指定することができます。
@@ -318,10 +380,10 @@ namespace BUILDLet.Standard.Utilities
         // ----------------------------------------------------------------------------------------------------
 
         /// <summary>
-        /// このインスタンスの <see cref="RawLine"/> を返します。
+        /// このインスタンスを表す文字列を返します。
         /// </summary>
         /// <returns>
-        /// このインスタンスの <see cref="RawLine"/>。
+        /// このインスタンスの <see cref="PrivateProfileLine.RawLine"/>。
         /// </returns>
         public override string ToString() => this.RawLine;
 
@@ -331,127 +393,13 @@ namespace BUILDLet.Standard.Utilities
         // ----------------------------------------------------------------------------------------------------
 
         /// <summary>
-        /// INI ファイル (初期化ファイル) の 1 ラインを解析します。
-        /// </summary>
-        /// <param name="line">
-        /// INI ファイルの 1 ラインを指定します。
-        /// </param>
-        /// <param name="section">
-        /// <paramref name="line"/> の <see cref="PrivateProfileLineType"/> が <see cref="PrivateProfileLineType.Section"/> だった場合に、
-        /// セクションの名前が格納されます。
-        /// その他の場合は <c>null</c> が格納されます。
-        /// </param>
-        /// <param name="key">
-        /// <paramref name="line"/> の <see cref="PrivateProfileLineType"/> が <see cref="PrivateProfileLineType.Entry"/> だった場合に、
-        /// キーが格納されます。
-        /// その他の場合は <c>null</c> が格納されます。
-        /// </param>
-        /// <param name="value">
-        /// <paramref name="line"/> の <see cref="PrivateProfileLineType"/> が <see cref="PrivateProfileLineType.Entry"/> だった場合に、
-        /// 値が格納されます。
-        /// その他の場合は <c>null</c> が格納されます。
-        /// </param>
-        /// <returns>
-        /// <paramref name="line"/> の <see cref="PrivateProfileLineType"/> を返します。
-        /// </returns>
-        /// <remarks>
-        /// <paramref name="line"/> の <see cref="PrivateProfileLineType"/> が <see cref="PrivateProfileLineType.Other"/> だった場合は、
-        /// <paramref name="section"/>、<paramref name="key"/> および <paramref name="value"/> には <c>null</c> が格納されます。
-        /// </remarks>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="line"/> に <c>null</c> が指定されました。
-        /// </exception>
-        /// <exception cref="FormatException">
-        /// <paramref name="line"/> に不正な文字列が指定されました。
-        /// </exception>
-        public static PrivateProfileLineType Parse(string line, out string section, out string key, out string value)
-        {
-            // Validation (Null Check):
-            if (line is null) { throw new ArgumentNullException(nameof(line)); }
-
-            // Initialize value(s)
-            PrivateProfileLineType type = PrivateProfileLineType.Other;
-            section = null;
-            key = null;
-            value = null;
-
-            // Remove Comment & Triming
-            string body = PrivateProfileLine.Trim(line);
-
-            // Parse Line
-            if (!string.IsNullOrWhiteSpace(body))
-            {
-                // Check SECTION
-                if (Regex.IsMatch(body, PrivateProfileLine.SectionLineMatchPattern))
-                {
-                    // SECTION Line:
-                    // SECTION was found!
-
-                    // SET SECTION Name
-                    section = body.Substring(1, body.Length - 2).Trim();
-
-                    // Validation: No SECTION Name;
-                    if (string.IsNullOrWhiteSpace(section)) { throw new FormatException(); }
-
-                    // SET Line Type
-                    type = PrivateProfileLineType.Section;
-                }
-                else if (body == "[]")
-                {
-                    // Remove Special Case
-                    throw new FormatException();
-                }
-                else
-                {
-                    // NOT SECTION Line:
-
-                    // Check KEY
-                    if (body.Contains(Char.ToString('=')))
-                    {
-                        // KEY and VALUE:
-
-                        // Validation: No KEY;
-                        if (body[0] == '=') { throw new FormatException(); }
-
-                        // SET KEY and VALUE
-                        key = body.Substring(0, body.IndexOf('=')).Trim();
-                        value = body.EndsWith("=", StringComparison.OrdinalIgnoreCase) ? string.Empty : body.Substring(body.IndexOf('=') + 1).Trim();
-                    }
-                    else
-                    {
-                        // KEY only:
-
-                        // SET KEY and VALUE
-                        key = body.Trim();
-                        value = null;
-                    }
-
-                    // SET Line Type
-                    type = PrivateProfileLineType.Entry;
-                }
-            }
-
-#if DEBUG
-            Debug.Write($"Line \"{body}\" (LineType = {type}", DebugInfo.ShortName);
-            Debug.WriteLine(", Section = {0}, Key = {1}, Value = {2})",
-                (section is null) ? "null" : $"\"{section}\"",
-                (key is null) ? "null" : $"\"{key}\"",
-                (value is null) ? "null" : $"\"{value}\"");
-#endif
-
-            // RETURN
-            return type;
-        }
-
-
-        /// <summary>
         /// 指定された文字列から、コメントを取り除いて、トリミングします。
         /// </summary>
         /// <param name="line">
-        /// 元の文字列。
+        /// 元の文字列
         /// </param>
         /// <returns>
-        /// コメントを取り除き、トリミングされた文字列。
+        /// コメントを取り除き、トリミングされた文字列
         /// </returns>
         /// <remarks>
         /// <paramref name="line"/> の中に <see cref="PrivateProfileLine.CommentIndicator"/> を検出すると、

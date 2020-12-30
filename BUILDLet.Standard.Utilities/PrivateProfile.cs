@@ -46,7 +46,7 @@ namespace BUILDLet.Standard.Utilities
         private FileStream fileStream = null;
 
         // Sections
-        private readonly Dictionary<string, PrivateProfileSection> sections = new Dictionary<string, PrivateProfileSection>(PrivateProfileSection.StringComparer);
+        private readonly Dictionary<string, PrivateProfileSection> sections = new Dictionary<string, PrivateProfileSection>(StringComparer.OrdinalIgnoreCase);
 
 
         // ----------------------------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ namespace BUILDLet.Standard.Utilities
         /// </summary>
         public PrivateProfile()
         {
-            // // NEW Sections
+            // NEW Sections
             this.Sections = new ReadOnlyDictionary<string, PrivateProfileSection>(this.sections);
         }
 
@@ -67,7 +67,7 @@ namespace BUILDLet.Standard.Utilities
         /// <see cref="PrivateProfile"/> クラスの新しいインスタンスを初期化して、指定された INI ファイルを読み取り専用で開きます。
         /// </summary>
         /// <param name="path">
-        /// INI ファイルのパス。
+        /// INI ファイルのパス
         /// </param>
         /// <param name="readOnly">
         /// INI ファイルを読み取り専用で開くときに <c>true</c> を指定します。
@@ -85,29 +85,6 @@ namespace BUILDLet.Standard.Utilities
         /// コンテンツのストリーム。
         /// </param>
         public PrivateProfile(Stream stream) : this() => this.Read(stream);
-
-
-        // ----------------------------------------------------------------------------------------------------
-        // Public, Protected Indexer(s)
-        // ----------------------------------------------------------------------------------------------------
-
-        /// <summary>
-        /// 指定されたセクションに含まれる全てのエントリー (キーと値の組み合わせ) を <see cref="Dictionary{String, String}"/> として取得します。
-        /// </summary>
-        /// <param name="section">
-        /// セクションの名前。
-        /// </param>
-        /// <remarks>
-        /// <para>
-        /// <note type="note">
-        /// このプロパティによって、次のような形式でエントリーの値を取得することができます。
-        /// <para>
-        /// <see cref="PrivateProfile"/><c>[&lt;section name&gt;][&lt;key&gt;]</c>
-        /// </para>
-        /// </note>
-        /// </para>
-        /// </remarks>
-        public ReadOnlyDictionary<string, string> this[string section] => this.sections[section].Entries;
 
 
         // ----------------------------------------------------------------------------------------------------
@@ -130,14 +107,14 @@ namespace BUILDLet.Standard.Utilities
         /// <remarks>
         /// <para>
         /// <note type="note">
-        /// このプロパティによって、次のような形式でエントリーの値を取得することができます。
+        /// このプロパティによって、次のような形式でエントリの値を取得することができます。
         /// <para>
         /// <see cref="PrivateProfile"/><c>.</c><see cref="PrivateProfile.Sections"/><c>[&lt;section name&gt;].</c><see cref="PrivateProfileSection.Entries"/><c>[&lt;key&gt;]</c>
         /// </para>
         /// </note>
         /// </para>
         /// </remarks>
-        public ReadOnlyDictionary<string, PrivateProfileSection> Sections { get; protected set; }
+        public ReadOnlyDictionary<string, PrivateProfileSection> Sections { get; }
 
         /// <summary>
         /// 開いている INI ファイルの名前を表します。
@@ -162,6 +139,29 @@ namespace BUILDLet.Standard.Utilities
 
 
         // ----------------------------------------------------------------------------------------------------
+        // Public, Protected Indexer(s)
+        // ----------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// 指定されたセクションに含まれる全てのエントリ (キーと値の組み合わせ) を <see cref="Dictionary{String, String}"/> として取得します。
+        /// </summary>
+        /// <param name="section">
+        /// セクションの名前
+        /// </param>
+        /// <remarks>
+        /// <para>
+        /// <note type="note">
+        /// このプロパティによって、次のような形式でエントリの値を取得することができます。
+        /// <para>
+        /// <see cref="PrivateProfile"/><c>[&lt;section name&gt;][&lt;key&gt;]</c>
+        /// </para>
+        /// </note>
+        /// </para>
+        /// </remarks>
+        public ReadOnlyDictionary<string, string> this[string section] => this.sections[section].Entries;
+
+
+        // ----------------------------------------------------------------------------------------------------
         // Public, Protected Method(s)
         // ----------------------------------------------------------------------------------------------------
 
@@ -169,7 +169,7 @@ namespace BUILDLet.Standard.Utilities
         /// INI ファイルを開きます。
         /// </summary>
         /// <param name="path">
-        /// INI ファイルのパス。
+        /// INI ファイルのパス
         /// </param>
         /// <param name="readOnly">
         /// INI ファイルを読み取り専用で開くときに <c>true</c> を指定します。
@@ -268,7 +268,7 @@ namespace BUILDLet.Standard.Utilities
         /// INI ファイル (初期化ファイル) を開いて、読み込みます。
         /// </summary>
         /// <param name="path">
-        /// INI ファイルのパス。
+        /// INI ファイルのパス
         /// </param>
         /// <param name="readOnly">
         /// INI ファイルを読み取り専用で開くときに <c>true</c> を指定します。
@@ -303,7 +303,7 @@ namespace BUILDLet.Standard.Utilities
         /// INI ファイル (初期化ファイル) のコンテンツをストリームから読み込みます。
         /// </summary>
         /// <param name="stream">
-        /// コンテンツのストリーム。
+        /// コンテンツのストリーム
         /// </param>
         public void Read(Stream stream)
         {
@@ -364,7 +364,7 @@ namespace BUILDLet.Standard.Utilities
         /// 指定された名前のセクションが含まれるかどうかを判定します。
         /// </summary>
         /// <param name="section">
-        /// 検索するセクションの名前。
+        /// 検索するセクションの名前
         /// </param>
         /// <returns>
         /// 指定された名前のセクションが含まれる場合に <c>true</c> を返します。
@@ -379,10 +379,10 @@ namespace BUILDLet.Standard.Utilities
         /// 指定された名前のセクションに、指定されたキーが含まれるかどうかを判定します。
         /// </summary>
         /// <param name="section">
-        /// 検索するセクションの名前。
+        /// 検索するセクションの名前
         /// </param>
         /// <param name="key">
-        /// 検索するキー。
+        /// 検索するキー
         /// </param>
         /// <returns>
         /// 指定された名前のセクションが存在し、かつ、そのセクションに指定されたキーが含まれる場合に <c>true</c> を返します。
@@ -409,16 +409,7 @@ namespace BUILDLet.Standard.Utilities
         /// <remarks>
         /// 改行コードは <see cref="PrivateProfile.LineBreakExpression"/> に置き換えられます。
         /// </remarks>
-        public string Export()
-        {
-            var content = new StringBuilder();
-
-            // Append Line Braek Expression
-            foreach (var line in this.GetRawLines()) { content.Append(line + PrivateProfile.LineBreakExpression); }
-
-            // RETURN
-            return content.ToString();
-        }
+        public string Export() => string.Join(PrivateProfile.LineBreakExpression, this.GetRawLines()) + PrivateProfile.LineBreakExpression;
 
 
         /// <summary>
@@ -429,7 +420,7 @@ namespace BUILDLet.Standard.Utilities
         /// </returns>
         public string[] GetRawLines()
         {
-            List<string> raw_lines = new List<string>();
+            var raw_lines = new List<string>();
 
             foreach (var section_name in this.sections.Keys)
             {
@@ -445,10 +436,10 @@ namespace BUILDLet.Standard.Utilities
         /// INI ファイル (初期化ファイル) から、指定したセクションとキーの組み合わせに対応する値を文字列として取得します。
         /// </summary>
         /// <param name="section">
-        /// セクション。
+        /// セクションの名前
         /// </param>
         /// <param name="key">
-        /// キー。
+        /// エントリのキー
         /// </param>
         /// <returns>
         /// 指定したセクションとキーの組み合わせに対応する値の文字列を返します。<br/>
@@ -462,13 +453,13 @@ namespace BUILDLet.Standard.Utilities
         /// INI ファイル (初期化ファイル) の指定したセクションとキーの組み合わせに対応する値を更新または追加します。
         /// </summary>
         /// <param name="section">
-        /// セクション。
+        /// セクションの名前
         /// </param>
         /// <param name="key">
-        /// キー。
+        /// エントリのキー
         /// </param>
         /// <param name="value">
-        /// 更新後の値。
+        /// 更新後の値
         /// </param>
         /// <returns>
         /// このメソッドは、この <see cref="PrivateProfile"/> オブジェクト自身を返します。
@@ -477,17 +468,17 @@ namespace BUILDLet.Standard.Utilities
         /// <para>
         /// 指定したセクションとキー、および、その値が存在する場合は、値を更新します。
         /// 指定したセクションとキーは存在して、値が存在しない場合は、値を追加します。
-        /// 指定したセクションは存在して、キーが存在しない場合は、そのセクションの末尾にエントリー (キーと値) を追加します。
-        /// 指定したセクションが存在しない場合は、ファイルの末尾に、そのセクションとエントリー (キーと値) を追加します。
+        /// 指定したセクションは存在して、キーが存在しない場合は、そのセクションの末尾にエントリ (キーと値) を追加します。
+        /// 指定したセクションが存在しない場合は、ファイルの末尾に、そのセクションとエントリ (キーと値) を追加します。
         /// </para>
         /// <para>
         /// <note type="note">
-        /// 当該エントリーの末尾にコメントがある場合、そのコメントは削除されます。
+        /// 当該エントリの末尾にコメントがある場合、そのコメントは削除されます。
         /// </note>
         /// </para>
         /// <para>
         /// <note type="warning">
-        /// 既に名前のないセクションが存在している場合のみ、名前のないセクションのエントリーを更新または追加をすることができます。
+        /// 既に名前のないセクションが存在している場合のみ、名前のないセクションのエントリを更新または追加をすることができます。
         /// 名前のないセクションが存在しない場合は、このメソッドによって、後から名前のないセクションを作成することはできません。
         /// </note>
         /// </para>
@@ -579,19 +570,18 @@ namespace BUILDLet.Standard.Utilities
         /// INI ファイル (初期化ファイル) の指定したセクションとキーの組み合わせに対応する値を削除します。
         /// </summary>
         /// <param name="section">
-        /// セクション。
+        /// セクションの名前
         /// </param>
         /// <param name="key">
-        /// キー。
+        /// エントリのキー
         /// </param>
         /// <returns>
         /// <para>
-        /// エントリーが見つかり、正常に削除された場合は <c>true</c>。
-        /// それ以外の場合は <c>false</c>。
+        /// エントリが見つかり、正常に削除された場合は <c>true</c> を返し、それ以外の場合は <c>false</c> を返します。
         /// </para>
         /// <para>
         /// <note type="note">
-        /// このメソッドは、<paramref name="key"/> がエントリーに見つからなかった場合にも <c>false</c> を返します。
+        /// このメソッドは、<paramref name="key"/> がエントリに見つからなかった場合にも <c>false</c> を返します。
         /// </note>
         /// </para>
         /// </returns>
@@ -602,12 +592,11 @@ namespace BUILDLet.Standard.Utilities
         /// INI ファイル (初期化ファイル) の指定したセクションを削除します。
         /// </summary>
         /// <param name="section">
-        /// セクション。
+        /// セクションの名前
         /// </param>
         /// <returns>
         /// <para>
-        /// セクションが見つかり、正常に削除された場合は <c>true</c>。
-        /// それ以外の場合は <c>false</c>。
+        /// セクションが見つかり、正常に削除された場合は <c>true</c> を返し、それ以外の場合は <c>false</c> を返します。
         /// </para>
         /// <para>
         /// <note type="note">
@@ -626,13 +615,13 @@ namespace BUILDLet.Standard.Utilities
         /// INI ファイル (初期化ファイル) から、指定したセクションとキーの組み合わせに対応する値を文字列として取得します。
         /// </summary>
         /// <param name="path">
-        /// INI ファイルのパス。
+        /// INI ファイルのパス
         /// </param>
         /// <param name="section">
-        /// セクション。
+        /// セクションの名前
         /// </param>
         /// <param name="key">
-        /// キー。
+        /// エントリのキー
         /// </param>
         /// <returns>
         /// 指定したセクションとキーの組み合わせに対応する値の文字列を返します。
@@ -657,16 +646,16 @@ namespace BUILDLet.Standard.Utilities
         /// INI ファイル (初期化ファイル) の指定したセクションとキーの組み合わせに対応する値を更新または追加します。
         /// </summary>
         /// <param name="path">
-        /// INI ファイルのパス。
+        /// INI ファイルのパス
         /// </param>
         /// <param name="section">
-        /// セクション。
+        /// セクションの名前
         /// </param>
         /// <param name="key">
-        /// キー。
+        /// エントリのキー
         /// </param>
         /// <param name="value">
-        /// 更新後の値。
+        /// 更新後の値
         /// </param>
         /// <remarks>
         /// <para>
@@ -677,17 +666,17 @@ namespace BUILDLet.Standard.Utilities
         /// <para>
         /// 指定したセクションとキー、および、その値が存在する場合は、値を更新します。
         /// 指定したセクションとキーは存在して、値が存在しない場合は、値を追加します。
-        /// 指定したセクションは存在して、キーが存在しない場合は、そのセクションの末尾にエントリー (キーと値) を追加します。
-        /// 指定したセクションが存在しない場合は、ファイルの末尾に、そのセクションとエントリー (キーと値) を追加します。
+        /// 指定したセクションは存在して、キーが存在しない場合は、そのセクションの末尾にエントリ (キーと値) を追加します。
+        /// 指定したセクションが存在しない場合は、ファイルの末尾に、そのセクションとエントリ (キーと値) を追加します。
         /// </para>
         /// <para>
         /// <note type="note">
-        /// 当該エントリーの末尾にコメントがある場合、そのコメントは削除されます。
+        /// 当該エントリの末尾にコメントがある場合、そのコメントは削除されます。
         /// </note>
         /// </para>
         /// <para>
         /// <note type="warning">
-        /// 既に名前のないセクションが存在している場合のみ、名前のないセクションのエントリーを更新または追加をすることができます。
+        /// 既に名前のないセクションが存在している場合のみ、名前のないセクションのエントリを更新または追加をすることができます。
         /// 名前のないセクションが存在しない場合は、このメソッドによって、後から名前のないセクションを作成することはできません。
         /// </note>
         /// </para>

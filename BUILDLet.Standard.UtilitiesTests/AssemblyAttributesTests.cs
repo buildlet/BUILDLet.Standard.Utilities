@@ -30,11 +30,13 @@ namespace BUILDLet.Standard.Utilities.Tests
     [TestClass]
     public class AssemblyAttributesTests
     {
+        public static readonly string FileVersion = "1.5.0.0";
+
         public class ToStringTestParameter : TestParameter<string>
         {
             public string Name = "BUILDLet.Standard.UtilitiesTests";
-            public string FullName = "BUILDLet.Standard.UtilitiesTests, Version=1.4.3.0, Culture=neutral, PublicKeyToken=null";
-            public string Version = "1.4.3.0";
+            public string FullName = $"BUILDLet.Standard.UtilitiesTests, Version={AssemblyAttributesTests.FileVersion}, Culture=neutral, PublicKeyToken=null";
+            public string Version = AssemblyAttributesTests.FileVersion;
             public CultureInfo CultureInfo = CultureInfo.InvariantCulture;
             public string CultureName = CultureInfo.InvariantCulture.Name;
             public string Title = "BUILDLet.Standard.UtilitiesTests";
@@ -43,7 +45,7 @@ namespace BUILDLet.Standard.Utilities.Tests
             public string Product = "BUILDLet.Standard.UtilitiesTests";
             public string Copyright = "© 2019 Daiki Sakamoto";
             public string Trademark = null;
-            public string FileVersion = "1.4.3.0";
+            public string FileVersion = AssemblyAttributesTests.FileVersion;
             public int LCID = 127;
             public string DisplayName = CultureInfo.InvariantCulture.DisplayName;
             public string NativeName = CultureInfo.InvariantCulture.NativeName;

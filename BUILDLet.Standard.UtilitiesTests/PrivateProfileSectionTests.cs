@@ -43,16 +43,18 @@ namespace BUILDLet.Standard.Utilities.Tests
             public string[][] Entries = null;
             public string[] RawLines = null;
 
-            // GET Expected
-            protected object[] GetExpected() => new object[] { this.Name, this.Entries, this.RawLines };
 
-            // GET Object[] from Section
-            protected object[] GetTestData(PrivateProfileSection section)
+            // ARRANGE: SET Expected
+            // { string Name, string[][] Entries, string[] RawLines }
+            public override void Arrange(out object[] expected) =>
+                expected = new object[] { this.Name, this.Entries, this.RawLines };
+
+
+            // Utility to convert Section into Object[]
+            public static object[] ConvertSectionToObjectArray(PrivateProfileSection section)
             {
                 // GET Entries
                 string[][] entries = new string[section.Entries.Count][];
-
-                // Copy to Array
                 var i = 0;
                 foreach (var key in section.Entries.Keys)
                 {
@@ -63,72 +65,27 @@ namespace BUILDLet.Standard.Utilities.Tests
                 return new object[]
                 {
                     section.Name,
-                    Entries = entries,
-                    RawLines = section.GetRawLines()
+                    entries,
+                    section.GetRawLines()
                 };
             }
+
 
             // ASSERT
             public override void Assert<TItem>(TItem expected, TItem actual)
             {
-                string expected_Name = (expected as object[])[0] as string;
-                string[][] expected_Entries = (expected as object[])[1] as string[][];
-                string[] expected_RawLines = (expected as object[])[2] as string[];
+                string expectedSectionName = (expected as object[])[0] as string;
+                string[][] expectedEntries = (expected as object[])[1] as string[][];
+                string[] expectedRawLines = (expected as object[])[2] as string[];
 
-                string actual_Name = (actual as object[])[0] as string;
-                string[][] actual_Entries = (actual as object[])[1] as string[][];
-                string[] actual_RawLines = (actual as object[])[2] as string[];
+                string actualSectionName = (actual as object[])[0] as string;
+                string[][] actualEntries = (actual as object[])[1] as string[][];
+                string[] actualRawLines = (actual as object[])[2] as string[];
 
-
-                // Print Section Name
-                Console.WriteLine($"Name: Expected\t= \"{expected_Name}\"");
-                Console.WriteLine($"Name: Actual\t= \"{actual_Name}\"");
-
-                // ASSERT Section Name
-                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(expected_Name, actual_Name);
-
-
-                // Print Number of Entries and Raw Lines
-                Console.WriteLine($"Number of Entries: Expected = {expected_Entries.Length}, Actual = {actual_Entries.Length}");
-                Console.WriteLine($"Number of Raw Lines: Expected = {expected_RawLines.Length}, Actual = {actual_RawLines.Length}");
-
-                // for internal validation
-                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(expected_RawLines.Length, expected_Entries.Length + 1);
-
-                // ASSERT Number of Entries and Raw Lines
-                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(expected_Entries.Length, actual_Entries.Length);
-                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(expected_RawLines.Length, actual_RawLines.Length);
-
-
-                // for Entries
-                for (int i = 0; i < expected_Entries.Length; i++)
-                {
-                    // // Print Numbers in Entry
-                    // Console.WriteLine($"Numbers in Entry[{i}]: Expected = {expected_Entries[i].Length}, Actual = {actual_Entries[i].Length}");
-
-                    // // ASSERT Numbers in Entry
-                    // Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(expected_Entries[i].Length, actual_Entries[i].Length);
-
-                    // Print Entry (KEY and VALUE)
-                    Console.WriteLine($"Entries[{i}]: Expected\t(Key, Value) = (\"{expected_Entries[i][0]}\", \"{expected_Entries[i][1]}\")");
-                    Console.WriteLine($"Entries[{i}]: Actual\t(Key, Value) = (\"{actual_Entries[i][0]}\", \"{actual_Entries[i][1]}\")");
-
-                    // ASSERT Entry
-                    Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(expected_Entries[i][0], actual_Entries[i][0]);
-                    Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(expected_Entries[i][1], actual_Entries[i][1]);
-                }
-
-
-                // for Raw Lines
-                for (int i = 0; i < expected_RawLines.Length; i++)
-                {
-                    // Print Raw Line
-                    Console.WriteLine($"Raw Lines[{i}]: Expected\t= \"{expected_RawLines[i]}\"");
-                    Console.WriteLine($"Raw Lines[{i}]: Actual\t= \"{actual_RawLines[i]}\"");
-
-                    // ASSERT Raw Line
-                    Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(expected_RawLines[i], actual_RawLines[i]);
-                }
+                // ASSERT Section
+                PrivateProfileSectionTests.AssertSection(
+                    expectedSectionName, expectedEntries, expectedRawLines,
+                    actualSectionName, actualEntries, actualRawLines);
             }
         }
 
@@ -137,13 +94,86 @@ namespace BUILDLet.Standard.Utilities.Tests
         // Utilities
         // ----------------------------------------------------------------
 
+        // Assert Section
+        public static void AssertSection(
+            string expectedSectionName, string[][] expectedEntries, string[] expectedRawLines,
+            string actualSectionName, string[][] actualEntries, string[] actualRawLines)
+        {
+            // Print blank line
+            Console.WriteLine();
+
+            // Print Section Name
+            Console.WriteLine($"Section Name: Expected \t= \"{expectedSectionName}\"");
+            Console.WriteLine($"Section Name: Actual \t= \"{actualSectionName}\"");
+            Console.WriteLine();
+
+            // ASSERT Section Name
+            Assert.AreEqual(expectedSectionName, actualSectionName);
+
+
+            // Print Number of Entries
+            Console.WriteLine($"Number of Entries: Expected = {expectedEntries.Length}, Actual = {actualEntries.Length}");
+
+            // ASSERT Number of Entries
+            Assert.AreEqual(expectedEntries.Length, actualEntries.Length);
+
+
+            // for Entries
+            for (int i = 0; i < expectedEntries.Length; i++)
+            {
+                // Print Entry (KEY and VALUE)
+                Console.WriteLine($"Entries[{i}]: Expected (Key, Value)\t= (\"{expectedEntries[i][0]}\", \"{expectedEntries[i][1]}\")");
+                Console.WriteLine($"Entries[{i}]: Actual (Key, Value)\t= (\"{actualEntries[i][0]}\", \"{actualEntries[i][1]}\")");
+
+                // ASSERT Entry
+                Assert.AreEqual(2, actualEntries[i].Length);
+                Assert.AreEqual(expectedEntries[i][0], actualEntries[i][0]);
+                Assert.AreEqual(expectedEntries[i][1], actualEntries[i][1]);
+            }
+
+
+            // for Raw Lines
+            if ((expectedRawLines != null) && (actualRawLines != null))
+            {
+                // Print blank line
+                Console.WriteLine();
+
+                // Print Raw Lines
+                Console.WriteLine($"Number of Raw Lines: Expected = {expectedRawLines.Length}, Actual = {actualRawLines.Length}");
+
+                // ASSERT Raw Lines
+                Assert.AreEqual(expectedRawLines.Length, actualRawLines.Length);
+
+
+                // for internal validation -> This is NOT applied to Null Section.
+                // Assert.AreEqual(expected_RawLines.Length, expected_Entries.Length + 1);
+
+
+                // for Raw Lines
+                for (int i = 0; i < expectedRawLines.Length; i++)
+                {
+                    // Print Raw Line
+                    Console.WriteLine($"Raw Lines[{i}]: Expected\t= \"{expectedRawLines[i]}\"");
+                    Console.WriteLine($"Raw Lines[{i}]: Actual\t= \"{actualRawLines[i]}\"");
+
+                    // ASSERT Raw Line
+                    Assert.AreEqual(expectedRawLines[i], actualRawLines[i]);
+                }
+            }
+        }
+
+
         // Print Section
         public static void PrintSection(PrivateProfileSection section)
         {
+            // Print Section Name
             Console.WriteLine("Section Name = " + (section.Name is null ? "(null)" : $"\"{section.Name}\""));
+
+            // for Entries
             var i = 0;
             foreach (var key in section.Entries.Keys)
             {
+                // Print Entry
                 Console.WriteLine("Entries[{0}] = ({1}, {2})", i++, key, (section.Entries[key] is null ? "null" : $"\"{section.Entries[key]}\""));
             }
         }
@@ -156,9 +186,6 @@ namespace BUILDLet.Standard.Utilities.Tests
         // TestParameter for NewSectionFromLinesTest
         public class NewSectionFromRawLinesTestParameter : SectionTestParameter
         {
-            // ARRANGE: SET Expected
-            public override void Arrange(out object[] expected) => expected = this.GetExpected();
-
             // ACT
             public override void Act(out object[] actual)
             {
@@ -166,13 +193,30 @@ namespace BUILDLet.Standard.Utilities.Tests
                 var section = new PrivateProfileSection(this.RawLines);
 
                 // GET Actual
-                actual = this.GetTestData(section);
+                actual = SectionTestParameter.ConvertSectionToObjectArray(section);
             }
         }
 
         // Test Data for New Section; NewSectionFromRawLinesTest and NewSectionFromPrivateProfileLinesTest
         public static IEnumerable<object[]> NewSectionTestData => new List<object[]>()
         {
+            // object[]
+            // {
+            //    // Section Name
+            //    string,
+            //
+            //    // Entries
+            //    string[][]
+            //    {
+            //        string[],
+            //        string[],
+            //        :
+            //    },
+            //
+            //    // Raw Lines
+            //    string[]
+            // }
+
             // 1)
             // (None)
 
@@ -239,27 +283,24 @@ namespace BUILDLet.Standard.Utilities.Tests
         // TestParameter for NewSectionFromPrivateProfileLinesTest
         public class NewSectionFromPrivateProfileLinesTestParameter : SectionTestParameter
         {
-            // ARRANGE: SET Expected
-            public override void Arrange(out object[] expected) => expected = this.GetExpected();
-
             // ACT
             public override void Act(out object[] actual)
             {
                 // NEW Lines
                 var lines = new PrivateProfileLine[this.RawLines.Length];
-
-                // for Lines
                 for (int i = 0; i < this.RawLines.Length; i++)
                 {
                     // NEW Line
                     lines[i] = new PrivateProfileLine(this.RawLines[i]);
                 }
 
+
                 // ACT: NEW Section
                 var section = new PrivateProfileSection(lines);
 
+
                 // GET Actual
-                actual = this.GetTestData(section);
+                actual = SectionTestParameter.ConvertSectionToObjectArray(section);
             }
         }
 
@@ -290,18 +331,19 @@ namespace BUILDLet.Standard.Utilities.Tests
         // TestParameter for NewSectionFromLinesTest
         public class NamePropertyChangeTestParameter : SectionTestParameter
         {
+            // Placeholder of Section
+            protected PrivateProfileSection Section = null;
+
             // Raw Lines before change
             public string[] BeforeRawLines = null;
 
 
-            // Placeholder of Section
-            protected PrivateProfileSection Section = null;
-
             // ARRANGE
             public override void Arrange(out object[] expected)
             {
-                // SET Expected
-                expected = this.GetExpected();
+                // BASE
+                base.Arrange(out expected);
+
 
                 // NEW Section
                 this.Section = new PrivateProfileSection(this.BeforeRawLines);
@@ -319,13 +361,28 @@ namespace BUILDLet.Standard.Utilities.Tests
                 this.Section.Name = this.Name;
 
                 // GET Actual
-                actual = this.GetTestData(this.Section);
+                actual = SectionTestParameter.ConvertSectionToObjectArray(this.Section);
             }
         }
 
         // Test Data for SectionNamePropertyChangeTest
         public static IEnumerable<object[]> SectionNamePropertyChangeTestData => new List<object[]>()
         {
+            // object[]
+            // {
+            //    // Section Name
+            //    string,
+            //
+            //    // Entries
+            //    string[][] { string[], string[],.. },
+            //
+            //    // Raw Lines
+            //    string[],
+            //    
+            //    // BeforeRawLines: Additional Data for SectionNamePropertyChangeTest
+            //    string[]
+            // }
+
             // 1)
             // (None)
 
@@ -345,6 +402,58 @@ namespace BUILDLet.Standard.Utilities.Tests
                 new string[]
                 {
                     "[SECTION]",
+                    "KEY=VALUE"
+                },
+
+                // BeforeRawLines: Additional Data for SectionNamePropertyChangeTest
+                new string[]
+                {
+                    "[Before]",
+                    "KEY=VALUE"
+                },
+            },
+
+            // 3) Chang from Null Section
+            new object[]
+            {
+                // Section Name
+                "SECTION",
+
+                // Entries
+                new string[][]
+                {
+                    new string[] { "KEY", "VALUE" }
+                },
+
+                // Raw Lines
+                new string[]
+                {
+                    "[SECTION]",
+                    "KEY=VALUE"
+                },
+
+                // BeforeRawLines: Additional Data for SectionNamePropertyChangeTest
+                new string[]
+                {
+                    "KEY=VALUE"
+                },
+            },
+
+            // 4) Change into Null Section
+            new object[]
+            {
+                // Section Name (Empty: Null Section)
+                "",
+
+                // Entries
+                new string[][]
+                {
+                    new string[] { "KEY", "VALUE" }
+                },
+
+                // Raw Lines
+                new string[]
+                {
                     "KEY=VALUE"
                 },
 
@@ -388,6 +497,7 @@ namespace BUILDLet.Standard.Utilities.Tests
             // Raw Lines before change
             public string[] BeforeRawLines = null;
 
+
             // Line to be Appended
             public string NewLine = null;
 
@@ -395,8 +505,9 @@ namespace BUILDLet.Standard.Utilities.Tests
             // ARRANGE
             public override void Arrange(out object[] expected)
             {
-                // SET Expected
-                expected = this.GetExpected();
+                // BASE
+                base.Arrange(out expected);
+
 
                 // NEW Section
                 this.Section = new PrivateProfileSection(this.BeforeRawLines);
@@ -414,13 +525,31 @@ namespace BUILDLet.Standard.Utilities.Tests
                 this.Section.Append(new PrivateProfileLine(this.NewLine));
 
                 // GET Actual
-                actual = this.GetTestData(this.Section);
+                actual = SectionTestParameter.ConvertSectionToObjectArray(this.Section);
             }
         }
 
         // Test Data for AppendMethodTest
         public static IEnumerable<object[]> AppendMethodTestData => new List<object[]>()
         {
+            // object[]
+            // {
+            //    // Section Name
+            //    string,
+            //
+            //    // Entries
+            //    string[][] { string[], string[],.. },
+            //
+            //    // Raw Lines
+            //    string[],
+            //
+            //    // BeforeRawLines: Additional Data for AppendMethodTest (1)
+            //    string[],
+            //    
+            //    // NewLine: Additional Data for AppendMethodTest (2)
+            //    string
+            // }
+
             // 1)
             // (None)
 
@@ -449,6 +578,36 @@ namespace BUILDLet.Standard.Utilities.Tests
                 new string[]
                 {
                     "[SECTION]",
+                    "KEY1=VALUE1"
+                },
+
+                // NewLine: Additional Data for AppendMethodTest (2)
+                "KEY2=VALUE2"
+            },
+
+            // 3) Null Section
+            new object[]
+            {
+                // Section Name
+                "",
+
+                // Entries
+                new string[][]
+                {
+                    new string[] { "KEY1", "VALUE1" },
+                    new string[] { "KEY2", "VALUE2" }
+                },
+
+                // Raw Lines
+                new string[]
+                {
+                    "KEY1=VALUE1",
+                    "KEY2=VALUE2"
+                },
+
+                // BeforeRawLines: Additional Data for AppendMethodTest (1)
+                new string[]
+                {
                     "KEY1=VALUE1"
                 },
 
@@ -500,8 +659,9 @@ namespace BUILDLet.Standard.Utilities.Tests
             // ARRANGE
             public override void Arrange(out object[] expected)
             {
-                // SET Expected
-                expected = this.GetExpected();
+                // BASE
+                base.Arrange(out expected);
+
 
                 // NEW Section
                 this.Section = new PrivateProfileSection(this.BeforeRawLines);
@@ -519,13 +679,34 @@ namespace BUILDLet.Standard.Utilities.Tests
                 this.Section.Update(this.Key, this.NewValue);
 
                 // GET Actual
-                actual = this.GetTestData(this.Section);
+                actual = SectionTestParameter.ConvertSectionToObjectArray(this.Section);
             }
         }
 
         // Test Data for UpdateMethodTest
         public static IEnumerable<object[]> UpdateMethodTestData => new List<object[]>()
         {
+            // object[]
+            // {
+            //    // Section Name
+            //    string,
+            //
+            //    // Entries
+            //    string[][] { string[], string[],.. },
+            //
+            //    // Raw Lines
+            //    string[],
+            //
+            //    // BeforeRawLines: Additional Data for UpdateMethodTest (1)
+            //    string[],
+            //    
+            //    // Key to be updated: Additional Data for UpdateMethodTest (2)
+            //    string,
+            //    
+            //    // NewValue: Additional Data for UpdateMethodTest (3)
+            //    string
+            // }
+
             // 1)
             // (None)
 
@@ -548,17 +729,48 @@ namespace BUILDLet.Standard.Utilities.Tests
                     "KEY=VALUE",
                 },
 
-                // BeforeRawLines: Additional Data for UpdateMethodTestData (1)
+                // BeforeRawLines: Additional Data for UpdateMethodTest (1)
                 new string[]
                 {
                     "[SECTION]",
                     "KEY=Before"
                 },
 
-                // Key: Additional Data for UpdateMethodTestData (2)
+                // Key to be updated: Additional Data for UpdateMethodTest (2)
                 "KEY",
 
-                // NewValue: Additional Data for UpdateMethodTestData (3)
+                // NewValue: Additional Data for UpdateMethodTest (3)
+                "VALUE"
+            },
+
+            // 3) Null Section
+            new object[]
+            {
+                // Section Name
+                "",
+
+                // Entries
+                new string[][]
+                {
+                    new string[] { "KEY", "VALUE" }
+                },
+
+                // Raw Lines
+                new string[]
+                {
+                    "KEY=VALUE",
+                },
+
+                // BeforeRawLines: Additional Data for UpdateMethodTest (1)
+                new string[]
+                {
+                    "KEY=Before"
+                },
+
+                // Key to be updated: Additional Data for UpdateMethodTest (2)
+                "KEY",
+
+                // NewValue: Additional Data for UpdateMethodTest (3)
                 "VALUE"
             },
         };
@@ -610,8 +822,8 @@ namespace BUILDLet.Standard.Utilities.Tests
             // ARRANGE
             public override void Arrange(out object[] expected)
             {
-                // SET Expected
-                expected = this.GetExpected();
+                // BASE
+                base.Arrange(out expected);
 
                 // NEW Section
                 this.Section = new PrivateProfileSection(this.BeforeRawLines);
@@ -632,7 +844,7 @@ namespace BUILDLet.Standard.Utilities.Tests
                 Console.WriteLine($"Return value of Remove() method = {this.result}");
 
                 // GET Actual
-                actual = this.GetTestData(this.Section);
+                actual = SectionTestParameter.ConvertSectionToObjectArray(this.Section);
             }
 
             // ASSERT
@@ -649,6 +861,27 @@ namespace BUILDLet.Standard.Utilities.Tests
         // Test Data for RemoveMethodTest
         public static IEnumerable<object[]> RemoveMethodTestData => new List<object[]>()
         {
+            // object[]
+            // {
+            //    // Section Name
+            //    string,
+            //
+            //    // Entries
+            //    string[][] { string[], string[],.. },
+            //
+            //    // Raw Lines
+            //    string[],
+            //
+            //    // BeforeRawLines: Additional Data for RemoveMethodTest (1)
+            //    string[],
+            //    
+            //    // Key to be removed: Additional Data for RemoveMethodTest (2)
+            //    string,
+            //    
+            //    // Return value of Remove() method: Additional Data for RemoveMethodTest (3)
+            //    bool
+            // }
+
             // 1)
             // (None)
 
@@ -679,8 +912,68 @@ namespace BUILDLet.Standard.Utilities.Tests
                     "KEY2=VALUE2"
                 },
 
-                // Key: Additional Data for RemoveMethodTest (2)
+                // Key to be removed: Additional Data for RemoveMethodTest (2)
                 "KEY2",
+
+                // Return value of Remove() method: Additional Data for RemoveMethodTest (3)
+                true
+            },
+
+            // 3)
+            new object[]
+            {
+                // Section Name
+                "SECTION",
+
+                // Entries
+                new string[][]
+                {
+                },
+
+                // Raw Lines
+                new string[]
+                {
+                    "[SECTION]",
+                },
+
+                // BeforeRawLines: Additional Data for RemoveMethodTest (1)
+                new string[]
+                {
+                    "[SECTION]",
+                    "KEY1=VALUE1",
+                },
+
+                // Key: Additional Data for RemoveMethodTest (2)
+                "KEY1",
+
+                // NewValue: Additional Data for RemoveMethodTest (3)
+                true
+            },
+
+            // 4) Null Section
+            new object[]
+            {
+                // Section Name
+                "",
+
+                // Entries
+                new string[][]
+                {
+                },
+
+                // Raw Lines
+                new string[]
+                {
+                },
+
+                // BeforeRawLines: Additional Data for RemoveMethodTest (1)
+                new string[]
+                {
+                    "KEY1=VALUE1",
+                },
+
+                // Key: Additional Data for RemoveMethodTest (2)
+                "KEY1",
 
                 // NewValue: Additional Data for RemoveMethodTest (3)
                 true
