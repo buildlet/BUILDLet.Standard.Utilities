@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>BUILDLet.Standard.Utilities.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
-    <Version>1.5.1</Version>
+    <Version>1.6</Version>
     <Authors>Daiki Sakamoto</Authors>
     <Company>BUILDLet</Company>
     <Description>Unit Tests for BUILDLet.Standard.Utilities</Description>
@@ -14,15 +14,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BUILDLet.Standard.UnitTest" Version="1.5.1" />
-    <PackageReference Include="BUILDLet.UnitTest.Utilities" Version="1.5.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
-    <PackageReference Include="coverlet.collector" Version="1.3.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="BUILDLet.UnitTest.Utilities" Version="1.6.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.3" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
   </ItemGroup>
 

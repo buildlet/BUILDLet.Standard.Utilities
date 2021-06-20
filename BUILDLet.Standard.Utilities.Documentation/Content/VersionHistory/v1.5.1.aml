@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<topic id="0ef0079d-1e70-42b4-bef4-207223317ea6" revisionNumber="1">
+<topic id="0ef0079d-1e70-42b4-bef4-207223317ea6" revisionNumber="2">
 	<developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
 		<introduction>
 			<para>
@@ -15,7 +15,8 @@
 
           <listItem>
             <para>
-              Only the target framework of Unit Test Project of the solution was upgraded from <legacyBold>.NET Core 3.0</legacyBold> into <legacyBold>.NET Core 3.1</legacyBold>.
+              Only the target framework of Unit Test Project of the solution was upgraded from .NET Core 3.0 (<codeInline>netcoreapp3.0</codeInline>)
+              into .NET Core 3.1 (<codeInline>netcoreapp3.1</codeInline>).
             </para>
           </listItem>
 

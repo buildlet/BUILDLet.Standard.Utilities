@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="6260714e-9710-4774-ae8a-6f7708c4f183" revisionNumber="1">
+	<developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+		<introduction>
+			<para>
+        Version 1.6 was released on June 20, 2021.
+      </para>
+		</introduction>
+
+		<section>
+			<title>Changes in This Release</title>
+			<content>
+
+				<list class="bullet">
+
+          <listItem>
+            <para>
+              Target framework of Unit Test Project of the solution was upgraded from .NET Core 3.1 (<codeInline>netcoreapp3.1</codeInline>)
+              into .NET 5 (<codeInline>net5.0</codeInline>).
+            </para>
+          </listItem>
+
+          <listItem>
+            <para>
+              <codeEntityReference>N:BUILDLet.Standard.Utilities.Network</codeEntityReference> Namespace and
+              <codeEntityReference qualifyHint="true">T:BUILDLet.Standard.Utilities.Network.MagicPacket</codeEntityReference> was added.
+            </para>
+          </listItem>
+
+        </list>
+
+			</content>
+		</section>
+
+		<relatedTopics>
+			<link xlink:href="d093b825-0d18-4f2f-bf8e-81bc018b8f6f" />
+		</relatedTopics>
+
+	</developerConceptualDocument>
+</topic>
