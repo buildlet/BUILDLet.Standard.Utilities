@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<topic id="63338126-2a10-402f-bb86-4cb68cfd336a" revisionNumber="1">
+<topic id="63338126-2a10-402f-bb86-4cb68cfd336a" revisionNumber="2">
 	<developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
 		<introduction>
 			<para>
@@ -13,7 +13,6 @@
         <para>
           This Help Documentation describes about the following namespaces.
         </para>
-
         <table>
 
           <!-- Table Header -->
@@ -28,6 +27,7 @@
             </row>
           </tableHeader>
 
+          
           <!-- BUILDLet.Standard.Utilities -->
           <row>
             <entry>
@@ -44,8 +44,24 @@
             </entry>
           </row>
 
+          
+          <!-- BUILDLet.Standard.Utilities.Network -->
+          <row>
+            <entry>
+              <para>
+                <codeEntityReference qualifyHint="true">N:BUILDLet.Standard.Utilities.Network</codeEntityReference>
+              </para>
+            </entry>
+            <entry>
+              <para>
+                <!-- Namespace Summaries -->
+                <codeEntityReference qualifyHint="true">N:BUILDLet.Standard.Utilities.Network</codeEntityReference>
+                名前空間には、ネットワークに関するユーティリティー クラスが含まれます。
+              </para>
+            </entry>
+          </row>
+          
         </table>
-
       </content>
 		</section>
 
