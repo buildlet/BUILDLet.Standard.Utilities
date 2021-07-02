@@ -46,12 +46,13 @@ namespace BUILDLet.Standard.Utilities
         /// </summary>
         /// <param name="assembly">
         /// 情報を取得するアセンブリを指定します。
-        /// null を指定すると、このメソッドを呼び出したメソッドのコードを格納しているアセンブリが格納されます。
-        /// 既定では null です。
         /// </param>
-        public AssemblyAttributes(Assembly assembly = null)
+        /// <remarks>
+        /// Version 1.6.1 より <c>null</c> を指定することはできなくなりました。
+        /// </remarks>
+        public AssemblyAttributes(Assembly assembly)
         {
-            this.assembly = assembly ?? Assembly.GetCallingAssembly();
+            this.assembly = assembly;
         }
 
 

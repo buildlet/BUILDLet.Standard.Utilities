@@ -85,18 +85,19 @@ namespace BUILDLet.Standard.Utilities.Network.Tests
         [DataRow("FF:FF:FF:00:00:00", 9, 5, 0)]
         [DataRow("01:23:45:AB:CD:EF", 9, 3, 100)]
         [DataRow("AB:CD:EF:01:23:45", 9, 2, 1000)]
+        [DataRow("01:23:45:AB:CD:EF", 9, 0, 1000, DisplayName = "Count = 0")]
         public void SendTest(string macAddress, int port, int count, int interval)
         {
             // ARRANGE
-            var expected = MagicPacketTests.GetNumberOfNetworkInterfaces();
+            var expected = count == 0 ? 0 : MagicPacketTests.GetNumberOfNetworkInterfaces();
 
             // ACT: Send Magic Packet
-            var sent = (port < 0 || count < 0 || interval < 0) ?
+            var sent = (port < 0 && count < 0 && interval < 0) ?
                 MagicPacket.Send(macAddress) :
                 MagicPacket.Send(macAddress, port, count, interval);
 
             // OUTPUT
-            for (int i = 0; i < sent.Length; i++)
+            for (int i = 0; i < sent?.Length; i++)
             {
                 Debug.WriteLine($"Source IP Address[{i}] = {sent[i]}");
             }

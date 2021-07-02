@@ -4,7 +4,7 @@
 		<introduction>
 			<para>
         The topics in this section describe the various changes made to the <application>BUILDLet Class Library (Utilities) for .NET Standard</application> over the life of the project.
-    </para>
+      </para>
 		</introduction>
 
 		<section>
@@ -53,6 +53,13 @@
           <listItem>
             <para>
               <link xlink:href="6260714e-9710-4774-ae8a-6f7708c4f183" />
+            </para>
+          </listItem>
+
+          <!-- Version 1.6.1 -->
+          <listItem>
+            <para>
+              <link xlink:href="08332121-5db3-43f8-b9a0-2e6d1dbe0dda" />
             </para>
           </listItem>
 

@@ -31,7 +31,7 @@ namespace BUILDLet.Standard.Utilities
 namespace BUILDLet.Standard.Utilities.Network
 {
     /// <summary>
-    /// <see cref="BUILDLet.Standard.Utilities"/> 名前空間には、ネットワークに関するユーティリティー クラスが含まれます。
+    /// <see cref="BUILDLet.Standard.Utilities.Network"/> 名前空間には、ネットワークに関するユーティリティー クラスが含まれます。
     /// </summary>
     [System.Runtime.CompilerServices.CompilerGenerated()]
     public class NamespaceDoc { }

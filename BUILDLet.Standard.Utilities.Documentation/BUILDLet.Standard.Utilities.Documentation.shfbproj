@@ -13,7 +13,7 @@
     <RootNamespace>BUILDLet.Standard.Utilities.Documentation</RootNamespace>
     <Name>BUILDLet.Standard.Utilities.Documentation</Name>
     <!-- SHFB properties -->
-    <FrameworkVersion>Cross-platform (.NET Core/.NET Standard)</FrameworkVersion>
+    <FrameworkVersion>.NET Core/.NET Standard/.NET 5.0+</FrameworkVersion>
     <OutputPath>.\Help\</OutputPath>
     <HtmlHelpName>BUILDLet.Standard.Utilities</HtmlHelpName>
     <Language>en-US</Language>
@@ -36,7 +36,7 @@
     <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
     <SaveComponentCacheCapacity>100</SaveComponentCacheCapacity>
     <HelpTitle>BUILDLet Class Library %28Utilities%29 for .NET Standard</HelpTitle>
-    <HelpFileVersion>1.6.0.0</HelpFileVersion>
+    <HelpFileVersion>1.6.1.0</HelpFileVersion>
     <NamingMethod>Guid</NamingMethod>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <RootNamespaceContainer>False</RootNamespaceContainer>
@@ -73,12 +73,13 @@
     <Folder Include="media" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Content\VersionHistory\v1.6.aml" />
+    <None Include="Content\VersionHistory\v1.4.0.aml" />
+    <None Include="Content\VersionHistory\v1.6.0.aml" />
+    <None Include="Content\VersionHistory\v1.6.1.aml" />
     <None Include="Content\VersionHistory\v1.5.1.aml" />
     <None Include="Content\VersionHistory\v1.5.0.aml" />
     <None Include="Content\VersionHistory\v1.4.3.aml" />
     <None Include="Content\VersionHistory\v1.4.2.aml" />
-    <None Include="Content\VersionHistory\v1.4.0.0.aml" />
     <None Include="Content\About.aml" />
     <None Include="Content\VersionHistory\VersionHistory.aml" />
   </ItemGroup>

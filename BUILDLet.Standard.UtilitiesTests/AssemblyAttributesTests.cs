@@ -21,6 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using System.Reflection;    // for Assembly
 using System.Globalization; // for CultureInfo
 
 using BUILDLet.UnitTest.Utilities; // for TestParameter Class
@@ -30,7 +31,7 @@ namespace BUILDLet.Standard.Utilities.Tests
     [TestClass]
     public class AssemblyAttributesTests
     {
-        public static readonly string FileVersion = "1.6.0.0";
+        public static readonly string FileVersion = "1.6.1.0";
 
         public class ToStringTestParameter : TestParameter<string>
         {
@@ -65,7 +66,7 @@ namespace BUILDLet.Standard.Utilities.Tests
 
             public override void Act(out string actual)
             {
-                actual = new AssemblyAttributes().ToString();
+                actual = new AssemblyAttributes(Assembly.GetExecutingAssembly()).ToString();
             }
         }
 
