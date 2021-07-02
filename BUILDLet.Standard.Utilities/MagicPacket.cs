@@ -112,8 +112,7 @@ namespace BUILDLet.Standard.Utilities.Network
             var dgram = MagicPacket.GetDatagram(macAddress);
 
             // List of IP Address sent
-            var sent = new List<string>();
-
+            List<string> addresses = new List<string>();
 
             // for NetworkInterface(s)
             foreach (var address in Dns.GetHostAddresses(Dns.GetHostName()))
@@ -125,6 +124,9 @@ namespace BUILDLet.Standard.Utilities.Network
                     var udp = new UdpClient(lep);
                     var ep = new IPEndPoint(IPAddress.Broadcast, port);
 
+                    // Sent Flag
+                    bool sent = false;
+
                     for (int i = 0; i < count; i++)
                     {
                         // Send Datagram (Async or Sync)
@@ -132,6 +134,9 @@ namespace BUILDLet.Standard.Utilities.Network
 
                         if (bytes > 0)
                         {
+                            // Set Sent Flag ON
+                            sent = true;
+
 #if DEBUG
                             Debug.Write($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] Send Magic Packet{(async ? " [Async]" : "")} (", DebugInfo.ShortName);
                             Debug.Write($"{i + 1}: MAC Address=\"{macAddress}\", {bytes} Bytes");
@@ -161,13 +166,15 @@ namespace BUILDLet.Standard.Utilities.Network
                     }
 
                     // Add IP Address sent
-                    sent.Add(address.ToString());
+                    if (sent)
+                    {
+                        addresses.Add(address.ToString());
+                    }
                 }
             }
 
-
             // RETURN
-            return sent.ToArray();
+            return addresses.ToArray();
         }
 
 
