@@ -24,8 +24,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Linq;
+using System.Diagnostics;
 
-using BUILDLet.UnitTest.Utilities; // for TestParameter Class
+using BUILDLet.UnitTest.Utilities;    // for TestParameter Class
+using BUILDLet.Standard.Diagnostics;  // for DebugInfo Class
 
 namespace BUILDLet.Standard.Utilities.Tests
 {
@@ -1294,6 +1296,124 @@ KEY3-2=VALUE3-2
 
             // ASSERT
             param.Validate();
+        }
+
+
+        // ----------------------------------------------------------------
+        // Tests of IgnoreDuplicatedEntry Property
+        // ----------------------------------------------------------------
+
+        [TestMethod]
+        [TestCategory("Exception")]
+        [ExpectedException(typeof(ArgumentException))]
+        public void IgnoreDuplicatedEntryPropertyExceptionTest()
+        {
+            // ARRANGE
+            var profile = new PrivateProfile();
+            var content = @";Test
+[Section]
+Key=Value1
+Key=Value2
+";
+
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(content)))
+            {
+                // ACT
+                profile.Read(stream);
+            }
+
+            // ASSERT
+            // (None)
+        }
+
+        // Input Types
+        private enum InputTypes { Stream, File };
+
+        [DataTestMethod]
+        [DataRow(@"[SECTION]
+KEY=VALUE1
+KEY=VALUE2",
+            @"[SECTION]
+KEY=VALUE1"
+            )]
+        [DataRow(@"[SECTION1]
+KEY=VALUE1
+KEY=VALUE2
+[SECTION2]
+KEY=VALUE1
+KEY=VALUE2",
+            @"[SECTION1]
+KEY=VALUE1
+[SECTION2]
+KEY=VALUE1"
+            )]
+        public void IgnoreDuplicatedEntryPropertyTest(string content, string expected)
+        {
+            // for Input Types (Stream, File)
+            foreach (var inputType in Enum.GetValues(typeof(InputTypes)))
+            {
+                // OUTPUT
+                Debug.WriteLine("");
+                Debug.WriteLine(inputType.ToString(), DebugInfo.ShortName);
+
+                // using PrivateProfile
+                using (var profile = new PrivateProfile(true))
+                {
+                    // ARRANGE & ACT
+                    switch (inputType)
+                    {
+                        case InputTypes.Stream:
+                            // Stream:
+
+                            // ARRANGE
+                            // (None)
+
+                            // ACT
+                            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(content)))
+                            {
+                                // ACT: Read from Stream
+                                profile.Read(stream);
+                            }
+                            break;
+
+                        case InputTypes.File:
+                            // File:
+
+                            // File Path
+                            var filepath = @$".\{nameof(IgnoreDuplicatedEntryPropertyTest)}.ini";
+
+                            // ARRANGE: Create File
+                            using (var file = File.CreateText(filepath))
+                            {
+                                foreach (var line in content.Split("\r\n"))
+                                {
+                                    file.WriteLine(line);
+                                }
+                            }
+
+                            // ACT: Read from File
+                            profile.Read(filepath);
+
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    // Get Raw Lines
+                    var expected_lines = expected.Split("\r\n");
+                    var actual_lines = profile.GetRawLines();
+
+                    // ASSERT (Length)
+                    Assert.AreEqual(expected_lines.Length, actual_lines.Length);
+
+                    // ASSERT (Raw Lines)
+                    for (int i = 0; i < expected_lines.Length; i++)
+                    {
+                        Assert.AreEqual(expected_lines[i], actual_lines[i]);
+                    }
+                }
+            }
         }
     }
 }

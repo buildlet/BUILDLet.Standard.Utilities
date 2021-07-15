@@ -36,7 +36,7 @@
     <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
     <SaveComponentCacheCapacity>100</SaveComponentCacheCapacity>
     <HelpTitle>BUILDLet Class Library %28Utilities%29 for .NET Standard</HelpTitle>
-    <HelpFileVersion>1.6.1.0</HelpFileVersion>
+    <HelpFileVersion>1.6.2.0</HelpFileVersion>
     <NamingMethod>Guid</NamingMethod>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <RootNamespaceContainer>False</RootNamespaceContainer>
@@ -73,6 +73,7 @@
     <Folder Include="media" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Content\VersionHistory\v1.6.2.aml" />
     <None Include="Content\VersionHistory\v1.4.0.aml" />
     <None Include="Content\VersionHistory\v1.6.0.aml" />
     <None Include="Content\VersionHistory\v1.6.1.aml" />

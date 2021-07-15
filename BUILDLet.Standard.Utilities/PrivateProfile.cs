@@ -56,10 +56,17 @@ namespace BUILDLet.Standard.Utilities
         /// <summary>
         /// <see cref="PrivateProfile"/> クラスの新しいインスタンスを初期化します。
         /// </summary>
-        public PrivateProfile()
+        /// <param name="ignoreDuplicatedEntry">
+        /// エントリのキーが重複している INI ファイルを読み込むことを許可する場合に <c>true</c> を指定します。
+        /// 既定は <c>false</c> です。
+        /// </param>
+        public PrivateProfile(bool ignoreDuplicatedEntry = false)
         {
             // NEW Sections
             this.Sections = new ReadOnlyDictionary<string, PrivateProfileSection>(this.sections);
+
+            // Set IgnoreDuplicatedEntry property
+            this.IgnoreDuplicatedEntry = ignoreDuplicatedEntry;
         }
 
 
@@ -72,10 +79,13 @@ namespace BUILDLet.Standard.Utilities
         /// <param name="readOnly">
         /// INI ファイルを読み取り専用で開くときに <c>true</c> を指定します。
         /// </param>
+        /// <param name="ignoreDuplicatedEntry">
+        /// <inheritdoc cref="PrivateProfile(bool)"/>
+        /// </param>
         /// <exception cref="InvalidOperationException">
         /// 既にファイルが開かれている状態で、書き込み用にファイルを開こうとしました。
         /// </exception>
-        public PrivateProfile(string path, bool readOnly = true) : this() => this.Read(path, readOnly);
+        public PrivateProfile(string path, bool readOnly = true, bool ignoreDuplicatedEntry = false) : this(ignoreDuplicatedEntry) => this.Read(path, readOnly);
 
 
         /// <summary>
@@ -84,7 +94,10 @@ namespace BUILDLet.Standard.Utilities
         /// <param name="stream">
         /// コンテンツのストリーム。
         /// </param>
-        public PrivateProfile(Stream stream) : this() => this.Read(stream);
+        /// <param name="ignoreDuplicatedEntry">
+        /// <inheritdoc cref="PrivateProfile(bool)"/>
+        /// </param>
+        public PrivateProfile(Stream stream, bool ignoreDuplicatedEntry = false) : this(ignoreDuplicatedEntry) => this.Read(stream);
 
 
         // ----------------------------------------------------------------------------------------------------
@@ -116,26 +129,34 @@ namespace BUILDLet.Standard.Utilities
         /// </remarks>
         public ReadOnlyDictionary<string, PrivateProfileSection> Sections { get; }
 
+
         /// <summary>
         /// 開いている INI ファイルの名前を表します。
         /// ファイルが開かれていないときは <c>null</c> を返します。
         /// </summary>
         public string FileName => this.fileStream?.Name;
 
+
         /// <summary>
         /// 現在のオブジェクトでファイルが開かれていることを示します。
         /// </summary>
         public bool IsOpen => this.fileStream != null;
+
 
         /// <summary>
         /// 現在のオブジェクトでファイルが読み込み専用で開かれていることを示します。
         /// </summary>
         public bool IsReadOnly { get; protected set; } = false;
 
+
         /// <summary>
         /// 現在のオブジェクトが更新されていることを示します。
         /// </summary>
         public bool IsUpdated { get; protected set; } = false;
+
+
+        /// <inheritdoc cref="PrivateProfileSection.IgnoreDuplicatedEntry"/>
+        public bool IgnoreDuplicatedEntry { get; set; } = false;
 
 
         // ----------------------------------------------------------------------------------------------------
@@ -322,7 +343,7 @@ namespace BUILDLet.Standard.Utilities
                 while (current_line != null)
                 {
                     // NEW & READ Section
-                    PrivateProfileSection section = PrivateProfileSection.Read(reader, current_line, out string next_line);
+                    PrivateProfileSection section = PrivateProfileSection.Read(reader, current_line, out string next_line, this.IgnoreDuplicatedEntry);
 
                     // Validations:
                     if (string.IsNullOrWhiteSpace(section.Name))
@@ -521,7 +542,7 @@ namespace BUILDLet.Standard.Utilities
                 if (string.IsNullOrWhiteSpace(section_name)) { throw new InvalidOperationException(); }
 
                 // ADD NEW Section
-                this.sections.Add(section, new PrivateProfileSection { Name = section_name });
+                this.sections.Add(section, new PrivateProfileSection(this.IgnoreDuplicatedEntry) { Name = section_name });
             }
 
             // GET Target Section
@@ -623,6 +644,10 @@ namespace BUILDLet.Standard.Utilities
         /// <param name="key">
         /// エントリのキー
         /// </param>
+        /// <param name="ignoreDuplicatedEntry">
+        /// エントリのキーが重複している INI ファイルを読み込むことを許可する場合に <c>true</c> を指定します。
+        /// 既定は <c>false</c> です。
+        /// </param>
         /// <returns>
         /// 指定したセクションとキーの組み合わせに対応する値の文字列を返します。
         /// 該当するセクションとキーの組み合わせが存在しない場合は <c>null</c> を返します。
@@ -633,9 +658,9 @@ namespace BUILDLet.Standard.Utilities
         /// 連続的に値を取得する場合は、このメソッドではなく、
         /// <see cref="PrivateProfile.GetValue(string, string)" autoUpgrade="true"/> メソッドを使用してください。
         /// </remarks>
-        public static string GetPrivateProfile(string path, string section, string key)
+        public static string GetPrivateProfile(string path, string section, string key, bool ignoreDuplicatedEntry = false)
         {
-            using (var profile = new PrivateProfile(path))
+            using (var profile = new PrivateProfile(path, true, ignoreDuplicatedEntry))
             {
                 return profile.GetValue(section, key);
             }
