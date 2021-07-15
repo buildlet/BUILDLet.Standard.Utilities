@@ -69,18 +69,30 @@ namespace BUILDLet.Standard.Utilities
         /// <summary>
         /// <see cref="PrivateProfileSection"/> クラスの新しいインスタンスを初期化します。
         /// </summary>
-        public PrivateProfileSection()
+        /// <param name="ignoreDuplicatedEntry">
+        /// エントリのキーが重複しているセクションを読み込むことを許可する場合に <c>true</c> を指定します。
+        /// 既定は <c>false</c> です。
+        /// </param>
+        public PrivateProfileSection(bool ignoreDuplicatedEntry = false)
         {
 #if false // DEBUG
             Debug.WriteLine("New Section", DebugInfo.ShortName);
 #endif
+
+            // Set IgnoreDuplicatedEntry property
+            this.IgnoreDuplicatedEntry = ignoreDuplicatedEntry;
 
             // NEW Entries
             this.Entries = new ReadOnlyDictionary<string, string>(this.entries);
         }
 
 
-        /// <inheritdoc cref="PrivateProfile()"/>
+        /// <summary>
+        /// <inheritdoc cref="PrivateProfileSection(bool)"/>
+        /// </summary>
+        /// <param name="ignoreDuplicatedEntry">
+        /// <inheritdoc cref="PrivateProfileSection(bool)"/>
+        /// </param>
         /// <param name="lines">
         /// このセクションに含まれる <see cref="PrivateProfileLine"/> の配列を指定します。
         /// </param>
@@ -90,7 +102,7 @@ namespace BUILDLet.Standard.Utilities
         /// <exception cref="ArgumentException">
         /// <paramref name="lines"/> の要素に不正な値が含まれています。
         /// </exception>
-        public PrivateProfileSection(PrivateProfileLine[] lines) : this()
+        public PrivateProfileSection(PrivateProfileLine[] lines, bool ignoreDuplicatedEntry = false) : this(ignoreDuplicatedEntry)
         {
             // Validation (Null Check):
             if (lines is null) { throw new ArgumentNullException(nameof(lines)); }
@@ -128,7 +140,12 @@ namespace BUILDLet.Standard.Utilities
         }
 
 
-        /// <inheritdoc cref="PrivateProfile()"/>
+        /// <summary>
+        /// <inheritdoc cref="PrivateProfileSection(bool)"/>
+        /// </summary>
+        /// <param name="ignoreDuplicatedEntry">
+        /// <inheritdoc cref="PrivateProfileSection(bool)"/>
+        /// </param>
         /// <param name="contents">
         /// INI ファイル (初期化ファイル) のセクション全体。
         /// </param>
@@ -138,7 +155,7 @@ namespace BUILDLet.Standard.Utilities
         /// <exception cref="ArgumentException">
         /// <paramref name="contents"/> の要素に <c>null</c> または不正な値が含まれます。
         /// </exception>
-        public PrivateProfileSection(string[] contents) : this()
+        public PrivateProfileSection(string[] contents, bool ignoreDuplicatedEntry = false) : this(ignoreDuplicatedEntry)
         {
             // Validation (Null Check):
             if (contents is null) { throw new ArgumentNullException(nameof(contents)); }
@@ -190,6 +207,20 @@ namespace BUILDLet.Standard.Utilities
         /// このセクションに含まれる全てのエントリを <see cref="Dictionary{String, String}"/> として取得します。
         /// </summary>
         public ReadOnlyDictionary<string, string> Entries { get; protected set; }
+
+
+        /// <summary>
+        /// セクションを読み込むときに、キーの重複を許可するかどうかを表します。
+        /// キーの重複を許可する場合は <c>true</c> です。
+        /// </summary>
+        /// <remarks>
+        /// <note type="note">
+        /// 読み込み中のセクションに同じキーのエントリが複数見つかったとき、
+        /// <see cref="IgnoreDuplicatedEntry"/> の値が <c>false</c> の場合は <see cref="ArgumentException"/> がスローされ、
+        /// <see cref="IgnoreDuplicatedEntry"/> の値が <c>true</c> の場合は、2つ目以降のエントリは無視されます。
+        /// </note>
+        /// </remarks>
+        public bool IgnoreDuplicatedEntry { get; }
 
 
         /// <summary>
@@ -295,16 +326,30 @@ namespace BUILDLet.Standard.Utilities
             {
                 // for 2nd Line and after
 
-                // Validation (Line Type):
+                // Validation (Line Type)
                 if (line.LineType != PrivateProfileLineType.Entry && line.LineType != PrivateProfileLineType.Other)
                 {
                     throw new ArgumentException(Resources.PrivateProfileInvalidLineTypeErrorMessage, nameof(line));
                 }
 
-                // Validation (Key Existence):
+                // Validation (Key Existence)
                 if ((line.LineType == PrivateProfileLineType.Entry) && this.entries.ContainsKey(line.Key))
                 {
-                    throw new ArgumentException(Resources.PrivateProfileKeyAlreadyExistsErrorMessage, nameof(line));
+                    if (!this.IgnoreDuplicatedEntry)
+                    {
+                        // Throw Exception
+                        throw new ArgumentException(Resources.PrivateProfileKeyAlreadyExistsErrorMessage, nameof(line));
+                    }
+                    else
+                    {
+#if DEBUG
+                        Debug.Write(string.IsNullOrEmpty(this.Name) ? "Null Section" : $"Section \"{this.Name}\"", DebugInfo.ShortName);
+                        Debug.WriteLine($": Appending line \"{line.RawLine}\" is skipped, because duplicated.");
+#endif
+
+                        // RETURN (Do Nothing)
+                        return;
+                    }
                 }
             }
 
@@ -495,11 +540,15 @@ namespace BUILDLet.Standard.Utilities
         /// このセクションの次にセクションがある場合に、そのセクションの最初の 1 ラインが格納されます。
         /// このセクションが最後のセクションだった場合は <c>null</c> が格納されます。
         /// </param>
+        /// <param name="ignoreDuplicatedEntry">
+        /// エントリのキーが重複しているセクションを読み込むことを許可する場合に <c>true</c> を指定します。
+        /// 既定は <c>false</c> です。
+        /// </param>
         /// <returns>
         /// 読み込みに成功した場合は、読み込んだセクション (<see cref="PrivateProfileSection"/>) を返します。
         /// 読み込みに失敗した場合は <c>null</c> を返します。
         /// </returns>
-        public static PrivateProfileSection Read(TextReader reader, string firstLine, out string nextLine)
+        public static PrivateProfileSection Read(TextReader reader, string firstLine, out string nextLine, bool ignoreDuplicatedEntry = false)
         {
             // Validation (Null Check):
             if (reader is null) { throw new ArgumentNullException(nameof(reader)); }
@@ -525,7 +574,7 @@ namespace BUILDLet.Standard.Utilities
                 if (section is null)
                 {
                     // NEW Section; because Section is NOT yet initialized.
-                    section = new PrivateProfileSection();
+                    section = new PrivateProfileSection(ignoreDuplicatedEntry);
 
                     // Check LineType (Null Section Check)
                     if (line.LineType != PrivateProfileLineType.Section)

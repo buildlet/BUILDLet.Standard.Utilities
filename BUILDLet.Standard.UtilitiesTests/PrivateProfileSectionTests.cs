@@ -998,5 +998,96 @@ namespace BUILDLet.Standard.Utilities.Tests
             // ASSERT
             param.Validate(autoEnumerable: false);
         }
+
+
+        // ----------------------------------------------------------------
+        // Tests of IgnoreDuplicatedEntry Property
+        // ----------------------------------------------------------------
+
+        [TestMethod]
+        [TestCategory("Exception")]
+        [ExpectedException(typeof(ArgumentException))]
+        public void IgnoreDuplicatedEntryPropertyExceptionTest()
+        {
+            // New Section
+            var section = new PrivateProfileSection { Name = "Test" };
+
+            // Append Entry
+            section.Append(new PrivateProfileLine() { Key = "Key", Value = "Value" });
+
+            // Append Another Entry
+            section.Append(new PrivateProfileLine() { Key = "Key1", Value = "Value1" });
+
+            // Append Same Entry (Exception)
+            section.Append(new PrivateProfileLine() { Key = "Key", Value = "Value2" });
+        }
+
+        // TestParameter for IgnoreDuplicatedEntryTest
+        public class IgnoreDuplicatedEntryPropertyTestParameter : SectionTestParameter
+        {
+            public override void Act(out object[] actual)
+            {
+                // New Section (ignoreDuplicatedEntry = true)
+                var section = new PrivateProfileSection(true) { Name = this.Name };
+
+                // Append Entries
+                foreach (var entry in this.Entries)
+                {
+                    section.Append(new PrivateProfileLine() { Key = entry[0], Value = entry[1] });
+                }
+
+                // Get Actual
+                actual = SectionTestParameter.ConvertSectionToObjectArray(section);
+
+                // Override Expected Length by Reming Entry
+                var list = this.Entries.ToList();
+                list.RemoveAt(2);
+                (this.Expected as object[])[1] = list.ToArray();
+            }
+        }
+
+        // Test Data for IgnoreDuplicatedEntryTest
+        public static IEnumerable<object[]> IgnoreDuplicatedEntryPropertyTestData => new List<object[]>()
+        {
+            new object[]
+            {
+                // Section Name
+                "Test",
+
+                // Entries
+                new string[][]
+                {
+                    new string[] { "Key", "Value" },
+                    new string[] { "Key1", "Value1" },
+                    new string[] { "Key1", "Value2" },
+                    new string[] { "Key2", "Value2" }
+                },
+
+                // RAW Lines
+                new string[]
+                {
+                    "[Test]",
+                    "Key=Value",
+                    "Key1=Value1",
+                    "Key2=Value2"
+                }
+            }
+        };
+
+        [DataTestMethod]
+        [DynamicData(nameof(IgnoreDuplicatedEntryPropertyTestData))]
+        public void IgnoreDuplicatedEntryPropertyTest(string name, string[][] entries, string[] lines)
+        {
+            // SET Parameter
+            IgnoreDuplicatedEntryPropertyTestParameter param = new IgnoreDuplicatedEntryPropertyTestParameter
+            {
+                Name = name,
+                RawLines = lines,
+                Entries = entries
+            };
+
+            // ASSERT
+            param.Validate(autoEnumerable: false);
+        }
     }
 }

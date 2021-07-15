@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<topic id="08332121-5db3-43f8-b9a0-2e6d1dbe0dda" revisionNumber="1">
+<topic id="08332121-5db3-43f8-b9a0-2e6d1dbe0dda" revisionNumber="2">
 	<developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
 		<introduction>
 			<para>
@@ -14,7 +14,7 @@
 				<list class="bullet">
           <listItem>
             <para>
-              When the parameter <parameterReference>counter</parameterReference> of
+              When the parameter <parameterReference>count</parameterReference> of
               <codeEntityReference>M:BUILDLet.Standard.Utilities.Network.MagicPacket.Send(System.String,System.Int32,System.Int32,System.Int32)</codeEntityReference>
               method and
               <codeEntityReference>M:BUILDLet.Standard.Utilities.Network.MagicPacket.SendAsync(System.String,System.Int32,System.Int32,System.Int32)</codeEntityReference>
@@ -27,7 +27,7 @@
               The parameter <parameterReference>assembly</parameterReference> for
               <codeEntityReference>M:BUILDLet.Standard.Utilities.AssemblyAttributes.#ctor(System.Reflection.Assembly)</codeEntityReference> constructor was changed into mandatory,
               because <errorInline>System.PlatformNotSupportedException</errorInline> ("<quoteInline>Operation is not supported on this platform.</quoteInline>")
-              is thorown on some platform (e.g., <languageKeyword>UWP</languageKeyword>).
+              is thrown on some platform (e.g., <languageKeyword>UWP</languageKeyword>).
             </para>
           </listItem>
         </list>

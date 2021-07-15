@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="5b94bea2-aeb2-46f2-bbe4-271a8996c53b" revisionNumber="1">
+	<developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+		<introduction>
+			<para>
+        Version 1.6.2 was released on July 15, 2021.
+      </para>
+		</introduction>
+
+		<section>
+			<title>Changes in This Release</title>
+			<content>
+				<list class="bullet">
+          <listItem>
+            <para>
+              <codeEntityReference>P:BUILDLet.Standard.Utilities.PrivateProfile.IgnoreDuplicatedEntry</codeEntityReference> property is added to
+              <codeEntityReference qualifyHint="true" linkText="BUILDLet.Standard.Utilities.PrivateProfile">T:BUILDLet.Standard.Utilities.PrivateProfile</codeEntityReference>
+              class and its
+              <codeEntityReference autoUpgrade="true" linkText="constructors">M:BUILDLet.Standard.Utilities.PrivateProfile.#ctor(System.Boolean)</codeEntityReference>,
+              and
+              <codeEntityReference autoUpgrade="true">M:BUILDLet.Standard.Utilities.PrivateProfile.GetPrivateProfile(System.String,System.String,System.String,System.Boolean)</codeEntityReference>
+              method.
+            </para>
+          </listItem>
+          
+          <listItem>
+            <para>
+              <codeEntityReference>P:BUILDLet.Standard.Utilities.PrivateProfileSection.IgnoreDuplicatedEntry</codeEntityReference> property is added to
+              <codeEntityReference qualifyHint="true" linkText="BUILDLet.Standard.Utilities.PrivateProfileSection">T:BUILDLet.Standard.Utilities.PrivateProfileSection</codeEntityReference>
+              class and its
+              <codeEntityReference autoUpgrade="true" linkText="constructors">M:BUILDLet.Standard.Utilities.PrivateProfileSection.#ctor(System.Boolean)</codeEntityReference>,
+              and
+              <codeEntityReference autoUpgrade="true">M:BUILDLet.Standard.Utilities.PrivateProfileSection.Read(System.IO.TextReader,System.String,System.String@,System.Boolean)</codeEntityReference>
+              method.
+            </para>
+          </listItem>
+        </list>
+			</content>
+		</section>
+
+		<relatedTopics>
+			<link xlink:href="d093b825-0d18-4f2f-bf8e-81bc018b8f6f" />
+		</relatedTopics>
+
+	</developerConceptualDocument>
+</topic>
