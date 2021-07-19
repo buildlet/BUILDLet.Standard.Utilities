@@ -223,7 +223,7 @@ world.
             //    Dictionary<string, string>() {}
             // }
 
-            // 2) Double Quotation
+            // 1) Double Quotation
             new object[]
             {
                 // Start Tag
@@ -237,7 +237,7 @@ world.
                 }
             },
 
-            // 3) Single Quotation
+            // 2) Single Quotation
             new object[]
             {
                 // Start Tag
@@ -251,7 +251,7 @@ world.
                 }
             },
 
-            // 4) No Quotation
+            // 3) No Quotation
             new object[]
             {
                 // Start Tag
@@ -265,7 +265,7 @@ world.
                 }
             },
 
-            // 5) Empty
+            // 4) Empty
             new object[]
             {
                 // Start Tag
@@ -279,7 +279,7 @@ world.
                 }
             },
 
-            // 6) Mix
+            // 5) Mix
             new object[]
             {
                 // Start Tag
@@ -516,7 +516,7 @@ world.
             //    string,
             // }
 
-            // 2)
+            // 1)
             new object[]
             {
                 // Text
@@ -542,7 +542,7 @@ world.
                 "Hello, world."
             },
 
-            // 3)
+            // 2)
             new object[]
             {
                 // Text
@@ -568,7 +568,7 @@ world.
                 "Hello, world."
             },
 
-            // 4)
+            // 3)
             new object[]
             {
                 // Text
@@ -594,7 +594,7 @@ world.
                 "Hello, world."
             },
 
-            // 5)
+            // 4)
             new object[]
             {
                 // Text
@@ -620,7 +620,7 @@ world.
                 "Hello, world."
             },
 
-            // 6)
+            // 5)
             new object[]
             {
                 // Text

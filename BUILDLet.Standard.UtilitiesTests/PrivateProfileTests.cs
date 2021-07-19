@@ -106,9 +106,9 @@ namespace BUILDLet.Standard.Utilities.Tests
                 string[][][] expected_Entries = (expected as object[])[1] as string[][][];
                 string[] expected_RawLines = (expected as object[])[2] as string[];
 
-                string[] actual_SectionNames = (expected as object[])[0] as string[];
-                string[][][] actual_Entries = (expected as object[])[1] as string[][][];
-                string[] actual_RawLines = (expected as object[])[2] as string[];
+                string[] actual_SectionNames = (actual as object[])[0] as string[];
+                string[][][] actual_Entries = (actual as object[])[1] as string[][][];
+                string[] actual_RawLines = (actual as object[])[2] as string[];
 
 
                 // Print Blank Line
@@ -250,13 +250,10 @@ namespace BUILDLet.Standard.Utilities.Tests
             // }
 
             // 1)
-            // (None)
-
-            // 2)
             new object[]
             {
                 // File Path
-                $@".\{nameof(ReadProfileTestData)}_002.ini",
+                $@".\{nameof(ReadProfileTestData)}_001.ini",
 
                 // Sections
                 new string[]
@@ -281,11 +278,11 @@ namespace BUILDLet.Standard.Utilities.Tests
                 }
             },
 
-            // 3)
+            // 2)
             new object[]
             {
                 // File Path
-                $@".\{nameof(ReadProfileTestData)}_003.ini",
+                $@".\{nameof(ReadProfileTestData)}_002.ini",
 
                 // Sections
                 new string[]
@@ -312,11 +309,11 @@ namespace BUILDLet.Standard.Utilities.Tests
                 }
             },
 
-            // 4)
+            // 3)
             new object[]
             {
                 // File Path
-                $@".\{nameof(ReadProfileTestData)}_004.ini",
+                $@".\{nameof(ReadProfileTestData)}_003.ini",
 
                 // Sections
                 new string[]
@@ -352,6 +349,151 @@ namespace BUILDLet.Standard.Utilities.Tests
                     "[SECTION2]",
                     "KEY2-1=VALUE2-1",
                     "KEY2-2=VALUE2-2"
+                }
+            },
+
+            // 4)
+            new object[]
+            {
+                // File Path
+                $@".\{nameof(ReadProfileTestData)}_004.ini",
+
+                // Sections
+                new string[]
+                {
+                    "",
+                    "SECTION1",
+                    "SECTION2"
+                },
+
+                // Entries
+                new string[][][]
+                {
+                    // Section 1st (Null)
+                    new string[0][],
+
+                    // Section 2nd
+                    new string[][]
+                    {
+                        new string[] { "KEY1-1", "VALUE1-1" },
+                        new string[] { "KEY1-2", "VALUE1-2" }
+                    },
+
+                    // Section 3rd
+                    new string[][]
+                    {
+                        new string[] { "KEY2-1", "VALUE2-1" },
+                        new string[] { "KEY2-2", "VALUE2-2" }
+                    }
+                },
+
+                // Raw Lines
+                new string[]
+                {
+                    ";COMMENT0",
+                    "[SECTION1]",
+                    ";COMMENT1",
+                    "KEY1-1=VALUE1-1",
+                    ";COMMENT2",
+                    "KEY1-2=VALUE1-2",
+                    ";COMMENT3",
+                    "[SECTION2]",
+                    "KEY2-1=VALUE2-1",
+                    ";COMMENT4",
+                    ";COMMENT5",
+                    "KEY2-2=VALUE2-2",
+                    ";COMMENT6"
+                }
+            },
+
+            // 5)
+            new object[]
+            {
+                // File Path
+                $@".\{nameof(ReadProfileTestData)}_005.ini",
+
+                // Sections
+                new string[]
+                {
+                    "",
+                    "SECTION"
+                },
+
+                // Entries
+                new string[][][]
+                {
+                    // Section 1st (Null)
+                    new string[0][],
+
+                    // Section 2nd
+                    new string[][]
+                    {
+                        new string[] { "KEY", "VALUE" }
+                    }
+                },
+
+                // Raw Lines
+                new string[]
+                {
+                    ";COMMENT1",
+                    ";COMMENT2",
+                    "[SECTION]",
+                    "KEY=VALUE",
+                    ";COMMENT3",
+                    ";COMMENT4"
+                }
+            },
+
+            // 6)
+            new object[]
+            {
+                // File Path
+                $@".\{nameof(ReadProfileTestData)}_006.ini",
+
+                // Sections
+                new string[]
+                {
+                    ""
+                },
+
+                // Entries
+                new string[][][]
+                {
+                    // Section 1st (Null)
+                    new string[0][]
+                },
+
+                // Raw Lines
+                new string[]
+                {
+                    ";COMMENT"
+                }
+            },
+
+            // 7)
+            new object[]
+            {
+                // File Path
+                $@".\{nameof(ReadProfileTestData)}_007.ini",
+
+                // Sections
+                new string[]
+                {
+                    ""
+                },
+
+                // Entries
+                new string[][][]
+                {
+                    // Section 1st (Null)
+                    new string[0][]
+                },
+
+                // Raw Lines
+                new string[]
+                {
+                    ";COMMENT1",
+                    ";COMMENT2"
                 }
             }
         };
@@ -486,9 +628,6 @@ namespace BUILDLet.Standard.Utilities.Tests
             // }
 
             // 1)
-            // (None)
-
-            // 2)
             new object[]
             {
                 // File Path
@@ -533,7 +672,7 @@ namespace BUILDLet.Standard.Utilities.Tests
                 "VALUE"
             },
 
-            // 3)
+            // 2)
             new object[]
             {
                 // File Path
@@ -584,7 +723,7 @@ namespace BUILDLet.Standard.Utilities.Tests
                 "VALUE2"
             },
 
-            // 4)
+            // 3)
             new object[]
             {
                 // File Path
@@ -721,9 +860,6 @@ namespace BUILDLet.Standard.Utilities.Tests
             // }
 
             // 1)
-            // (None)
-
-            // 2)
             new object[]
             {
                 // File Path
@@ -770,7 +906,7 @@ namespace BUILDLet.Standard.Utilities.Tests
                 "VALUE2"
             },
 
-            // 3)
+            // 2)
             new object[]
             {
                 // File Path
@@ -835,7 +971,7 @@ namespace BUILDLet.Standard.Utilities.Tests
                 "VALUE1-3"
             },
 
-            // 4)
+            // 3)
             new object[]
             {
                 // File Path
@@ -900,7 +1036,7 @@ namespace BUILDLet.Standard.Utilities.Tests
                 "VALUE2-3"
             },
 
-            // 5)
+            // 4)
             new object[]
             {
                 // File Path
@@ -1067,9 +1203,6 @@ namespace BUILDLet.Standard.Utilities.Tests
             // }
 
             // 1)
-            // (None)
-
-            // 2)
             new object[]
             {
                 // File Path
@@ -1118,7 +1251,7 @@ namespace BUILDLet.Standard.Utilities.Tests
                 true
             },
 
-            // 3)
+            // 2)
             new object[]
             {
                 // File Path
@@ -1167,7 +1300,7 @@ namespace BUILDLet.Standard.Utilities.Tests
                 true
             },
 
-            // 4)
+            // 3)
             new object[]
             {
                 // File Path

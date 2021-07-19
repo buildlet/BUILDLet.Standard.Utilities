@@ -218,9 +218,6 @@ namespace BUILDLet.Standard.Utilities.Tests
             // }
 
             // 1)
-            // (None)
-
-            // 2)
             new object[]
             {
                 // Section Name
@@ -237,6 +234,28 @@ namespace BUILDLet.Standard.Utilities.Tests
                 {
                     "[SECTION]",
                     "KEY=VALUE"
+                }
+            },
+
+            // 2)
+            new object[]
+            {
+                // Section Name
+                "SECTION",
+
+                // Entries
+                new string[][]
+                {
+                    new string[] { "KEY1", "VALUE1" },
+                    new string[] { "KEY2", "VALUE2" }
+                },
+
+                // Raw Lines
+                new string[]
+                {
+                    "[SECTION]",
+                    "KEY1=VALUE1",
+                    "KEY2=VALUE2"
                 }
             },
 
@@ -257,8 +276,27 @@ namespace BUILDLet.Standard.Utilities.Tests
                 new string[]
                 {
                     "[SECTION]",
+                    ";COMMENT1",
                     "KEY1=VALUE1",
-                    "KEY2=VALUE2"
+                    ";COMMENT2",
+                    "KEY2=VALUE2",
+                    ";COMMENT3"
+                }
+            },
+
+            // 4)
+            new object[]
+            {
+                // Section Name
+                "",
+
+                // Entries
+                new string[0][],
+
+                // Raw Lines
+                new string[]
+                {
+                    ";COMMENT1",
                 }
             }
         };
@@ -286,12 +324,23 @@ namespace BUILDLet.Standard.Utilities.Tests
             // ACT
             public override void Act(out object[] actual)
             {
+                // Get 1st line
+                var first_line = new PrivateProfileLine(this.RawLines[0]);
+
+                // Get Null Section Flag
+                var null_section = (first_line.LineType != PrivateProfileLineType.Section);
+
                 // NEW Lines
-                var lines = new PrivateProfileLine[this.RawLines.Length];
-                for (int i = 0; i < this.RawLines.Length; i++)
+                var lines = new PrivateProfileLine[this.RawLines.Length + (null_section ? 1 : 0)];
+
+                // Add Null Section Line
+                if (null_section) { lines[0] = new PrivateProfileLine(null); }
+
+                // for Lines
+                for (int i = (null_section ? 1 : 0); i < lines.Length; i++)
                 {
                     // NEW Line
-                    lines[i] = new PrivateProfileLine(this.RawLines[i]);
+                    lines[i] = new PrivateProfileLine(this.RawLines[i - (null_section ? 1 : 0)]);
                 }
 
 
