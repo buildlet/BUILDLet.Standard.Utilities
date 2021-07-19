@@ -48,9 +48,6 @@ namespace BUILDLet.Standard.Utilities.Tests
             // }
 
             // 1)
-            // (None)
-
-            // 2)
             new object[]
             {
                 // Input
@@ -60,7 +57,7 @@ namespace BUILDLet.Standard.Utilities.Tests
                 new string[] { "", "html", "head", "title" }
             },
 
-            // 3)
+            // 2)
             new object[]
             {
                 // Input
@@ -70,7 +67,7 @@ namespace BUILDLet.Standard.Utilities.Tests
                 new string[] { "html", "head", "title" }
             },
 
-            // 4)
+            // 3)
             new object[]
             {
                 // Input
@@ -80,7 +77,7 @@ namespace BUILDLet.Standard.Utilities.Tests
                 new string[] { "", "HTML", "FRAMESET[@rows=\"100,*\"]" }
             },
 
-            // 5)
+            // 4)
             new object[]
             {
                 // Input
@@ -129,9 +126,6 @@ namespace BUILDLet.Standard.Utilities.Tests
             // }
 
             // 1)
-            // (None)
-
-            // 2)
             new object[]
             {
                 // Input
@@ -141,7 +135,7 @@ namespace BUILDLet.Standard.Utilities.Tests
                 new string[] { "@rows=\"100,*\"" }
             },
 
-            // 3)
+            // 2)
             new object[]
             {
                 // Input
@@ -151,7 +145,7 @@ namespace BUILDLet.Standard.Utilities.Tests
                 new string[] { "@class=\"100\"", "@class=\"200\"" }
             },
 
-            // 4)
+            // 3)
             new object[]
             {
                 // Input

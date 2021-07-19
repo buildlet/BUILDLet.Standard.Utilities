@@ -70,6 +70,20 @@
             </para>
           </listItem>
 
+          <!-- Version 1.6.3 -->
+          <listItem>
+            <para>
+              <link xlink:href="97e81227-f168-4ab8-adcf-1ee08ebf5e58" />
+            </para>
+          </listItem>
+
+          <!-- Version 1.6.4 -->
+          <listItem>
+            <para>
+              <link xlink:href="9c836eea-48f6-46b3-8330-5e1765ab3e16" />
+            </para>
+          </listItem>
+
           <!--
 					<listItem>
 						<para>[TODO: Add links to each specific version page]</para>

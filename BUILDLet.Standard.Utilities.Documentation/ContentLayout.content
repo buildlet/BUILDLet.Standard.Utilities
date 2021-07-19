@@ -44,9 +44,19 @@
         <HelpKeyword index="K" term="version, 1.6.1" />
       </HelpKeywords>
     </Topic>
-    <Topic id="5b94bea2-aeb2-46f2-bbe4-271a8996c53b" visible="True" isSelected="true" title="Version 1.6.2">
+    <Topic id="5b94bea2-aeb2-46f2-bbe4-271a8996c53b" visible="True" title="Version 1.6.2">
       <HelpKeywords>
         <HelpKeyword index="K" term="version, 1.6.2" />
+      </HelpKeywords>
+    </Topic>
+    <Topic id="97e81227-f168-4ab8-adcf-1ee08ebf5e58" visible="True" title="Version 1.6.3">
+      <HelpKeywords>
+        <HelpKeyword index="K" term="version, 1.6.3" />
+      </HelpKeywords>
+    </Topic>
+    <Topic id="9c836eea-48f6-46b3-8330-5e1765ab3e16" visible="True" isSelected="true" title="Version 1.6.4">
+      <HelpKeywords>
+        <HelpKeyword index="K" term="version, 1.6.4" />
       </HelpKeywords>
     </Topic>
   </Topic>

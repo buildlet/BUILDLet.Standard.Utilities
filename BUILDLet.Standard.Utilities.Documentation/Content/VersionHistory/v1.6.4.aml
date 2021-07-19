@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="9c836eea-48f6-46b3-8330-5e1765ab3e16" revisionNumber="1">
+	<developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+		<introduction>
+			<para>
+        Version 1.6.4 was released on July 19, 2021.
+      </para>
+		</introduction>
+
+		<section>
+			<title>Changes in This Release</title>
+			<content>
+				<list class="bullet">
+          <listItem>
+            <para>
+              The following bugs are fixed.
+            </para>
+            <list class="bullet">
+              <listItem>
+                <para>
+                  The last comment line in no-name section before the next section is not read correctly.
+                </para>
+              </listItem>
+            </list>
+          </listItem>
+        </list>
+			</content>
+		</section>
+
+		<relatedTopics>
+			<link xlink:href="d093b825-0d18-4f2f-bf8e-81bc018b8f6f" />
+		</relatedTopics>
+
+	</developerConceptualDocument>
+</topic>

@@ -31,7 +31,7 @@ namespace BUILDLet.Standard.Utilities.Tests
     [TestClass]
     public class AssemblyAttributesTests
     {
-        public static readonly string FileVersion = "1.6.2.0";
+        public static readonly string FileVersion = "1.6.4.0";
 
         public class ToStringTestParameter : TestParameter<string>
         {

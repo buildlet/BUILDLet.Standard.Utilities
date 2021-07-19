@@ -90,11 +90,11 @@ namespace BUILDLet.Standard.Utilities
         /// <summary>
         /// <inheritdoc cref="PrivateProfileSection(bool)"/>
         /// </summary>
-        /// <param name="ignoreDuplicatedEntry">
-        /// <inheritdoc cref="PrivateProfileSection(bool)"/>
-        /// </param>
         /// <param name="lines">
         /// このセクションに含まれる <see cref="PrivateProfileLine"/> の配列を指定します。
+        /// </param>
+        /// <param name="ignoreDuplicatedEntry">
+        /// <inheritdoc cref="PrivateProfileSection(bool)"/>
         /// </param>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="lines"/> に <c>null</c> が指定されました。
@@ -143,11 +143,11 @@ namespace BUILDLet.Standard.Utilities
         /// <summary>
         /// <inheritdoc cref="PrivateProfileSection(bool)"/>
         /// </summary>
-        /// <param name="ignoreDuplicatedEntry">
-        /// <inheritdoc cref="PrivateProfileSection(bool)"/>
-        /// </param>
         /// <param name="contents">
         /// INI ファイル (初期化ファイル) のセクション全体。
+        /// </param>
+        /// <param name="ignoreDuplicatedEntry">
+        /// <inheritdoc cref="PrivateProfileSection(bool)"/>
         /// </param>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="contents"/> に <c>null</c> が指定されました。
@@ -582,8 +582,14 @@ namespace BUILDLet.Standard.Utilities
                         // Insert Line for Null Section
                         section.Append(new PrivateProfileLine(null));
 
+                        // ADD SECTION
+                        section.Append(line);
+
+                        // Check NEXT Line
+                        if ((raw_line = reader.ReadLine()) == null) { break; }
+
                         // Read NEXT Line
-                        if ((raw_line = reader.ReadLine()) != null) { line = new PrivateProfileLine(raw_line); }
+                        line = new PrivateProfileLine(raw_line);
                     }
                 }
 

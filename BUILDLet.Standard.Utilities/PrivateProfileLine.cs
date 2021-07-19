@@ -51,9 +51,11 @@ namespace BUILDLet.Standard.Utilities
         /// <see cref="PrivateProfileLine"/> クラスの新しいインスタンスを初期化します。
         /// </summary>
         /// <remarks>
-        /// <see cref="PrivateProfileLine.LineType"/> および <see cref="PrivateProfileLine.RawLine"/> には、
-        /// それぞれ、既定の値 (<see cref="PrivateProfileLineType.NotInitialized"/> および <c>null</c>)
-        /// が設定されます。
+        /// <note type="warning">
+        /// このコンストラクターによってインスタンスを初期化した場合は、<see cref="PrivateProfileLine.SectionName"/> プロパティ、
+        /// または <see cref="PrivateProfileLine.Key"/> プロパティ および <see cref="PrivateProfileLine.Value"/> プロパティを初期化する必要があります。
+        /// 必要な初期化を行わずに、これらのプロパティにアクセスした場合は <see cref="InvalidOperationException"/> がスローされます。
+        /// </note>
         /// </remarks>
         public PrivateProfileLine()
         {
@@ -71,8 +73,8 @@ namespace BUILDLet.Standard.Utilities
         /// </param>
         /// <remarks>
         /// <paramref name="line"/> に <c>null</c> を指定すると、名前のないセクション行が作成され、
-        /// <see cref="PrivateProfileLine.LineType"/>、<see cref="PrivateProfileLine.SectionName"/> および <see cref="PrivateProfileLine.RawLine"/> には、
-        /// それぞれ、<see cref="PrivateProfileLineType.Section"/>、<see cref="string.Empty"/> および <c>null</c> が設定されます。
+        /// <see cref="PrivateProfileLine.LineType"/>, <see cref="PrivateProfileLine.SectionName"/> および <see cref="PrivateProfileLine.RawLine"/> には、
+        /// それぞれ、<see cref="PrivateProfileLineType.Section"/>, <see cref="string.Empty"/> および <c>null</c> が設定されます。
         /// </remarks>
         public PrivateProfileLine(string line) : this()
         {
@@ -359,6 +361,8 @@ namespace BUILDLet.Standard.Utilities
                 // // Validation (Format) -> '=' is allowed.
                 // if ((value != null) && value.Contains("=")) { throw new FormatException(); }
 
+                // Validation (key)
+                if (string.IsNullOrWhiteSpace(this.key)) { throw new InvalidOperationException(); }
 
                 // UPDATE LineType
                 this.LineType = PrivateProfileLineType.Entry;
