@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>1.6.4</Version>
+    <Version>1.6.6</Version>
     <Authors>Daiki Sakamoto</Authors>
     <Company>BUILDLet</Company>
     <Description>BUILDLet Class Library (Utilities) for .NET Standard</Description>
@@ -13,6 +13,7 @@
     <PackageProjectUrl>https://github.com/buildlet/BUILDLet.Standard.Utilities</PackageProjectUrl>
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <Product>BUILDLet Class Library (Utilities) for .NET Standard</Product>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -29,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BUILDLet.Standard.Diagnostics" Version="1.6.0" />
+    <PackageReference Include="BUILDLet.Standard.Diagnostics" Version="1.6.6" />
   </ItemGroup>
 
   <ItemGroup>

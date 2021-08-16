@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<topic id="9c836eea-48f6-46b3-8330-5e1765ab3e16" revisionNumber="1">
+<topic id="9c836eea-48f6-46b3-8330-5e1765ab3e16" revisionNumber="2">
 	<developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
 		<introduction>
 			<para>
@@ -11,18 +11,22 @@
 			<title>Changes in This Release</title>
 			<content>
 				<list class="bullet">
+
           <listItem>
             <para>
-              The following bugs are fixed.
+              The following defects were fixed.
             </para>
             <list class="bullet">
               <listItem>
                 <para>
-                  The last comment line in no-name section before the next section is not read correctly.
+                  The last comment line in no-name section before the next section is not correctly read by 
+                  <codeEntityReference linkText="BUILDLet.Standard.Utilities.PrivateProfileSection">T:BUILDLet.Standard.Utilities.PrivateProfileSection</codeEntityReference>
+                  class.
                 </para>
               </listItem>
             </list>
           </listItem>
+          
         </list>
 			</content>
 		</section>
