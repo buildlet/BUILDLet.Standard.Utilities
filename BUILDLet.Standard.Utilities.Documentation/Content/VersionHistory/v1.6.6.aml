@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<topic id="0ef0079d-1e70-42b4-bef4-207223317ea6" revisionNumber="2">
+<topic id="7ea8575f-fe89-4d53-9b3c-a3818572c8e1" revisionNumber="1">
 	<developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
 		<introduction>
 			<para>
-        Version 1.5.1 was released on December 31, 2020.
+        Version 1.6.6 was released on August 16, 2021.
       </para>
 		</introduction>
 
@@ -11,14 +11,13 @@
 			<title>Changes in This Release</title>
 			<content>
 				<list class="bullet">
-
+          
           <listItem>
             <para>
-              Only the target framework of Unit Test Project of the solution was upgraded from .NET Core 3.0 (<codeInline>netcoreapp3.0</codeInline>)
-              into .NET Core 3.1 (<codeInline>netcoreapp3.1</codeInline>).
+              Minor Update (only internal changes)
             </para>
           </listItem>
-
+        
         </list>
 			</content>
 		</section>

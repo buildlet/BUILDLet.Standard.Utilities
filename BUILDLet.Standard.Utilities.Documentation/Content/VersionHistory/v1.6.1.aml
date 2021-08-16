@@ -10,8 +10,8 @@
 		<section>
 			<title>Changes in This Release</title>
 			<content>
-
 				<list class="bullet">
+          
           <listItem>
             <para>
               When the parameter <parameterReference>count</parameterReference> of
@@ -30,8 +30,8 @@
               is thrown on some platform (e.g., <languageKeyword>UWP</languageKeyword>).
             </para>
           </listItem>
-        </list>
 
+        </list>
 			</content>
 		</section>
 

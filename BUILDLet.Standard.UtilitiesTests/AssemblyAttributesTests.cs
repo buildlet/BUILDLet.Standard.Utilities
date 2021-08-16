@@ -31,7 +31,7 @@ namespace BUILDLet.Standard.Utilities.Tests
     [TestClass]
     public class AssemblyAttributesTests
     {
-        public static readonly string FileVersion = "1.6.4.0";
+        public static readonly string FileVersion = "1.6.6.0";
 
         public class ToStringTestParameter : TestParameter<string>
         {
@@ -43,7 +43,7 @@ namespace BUILDLet.Standard.Utilities.Tests
             public string Title = "BUILDLet.Standard.UtilitiesTests";
             public string Description = "Unit Tests for BUILDLet.Standard.Utilities";
             public string Company = "BUILDLet";
-            public string Product = "BUILDLet.Standard.UtilitiesTests";
+            public string Product = "Unit Tests for BUILDLet.Standard.Utilities";
             public string Copyright = "© 2019 Daiki Sakamoto";
             public string Trademark = null;
             public string FileVersion = AssemblyAttributesTests.FileVersion;
